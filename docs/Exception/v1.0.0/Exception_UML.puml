@@ -1,0 +1,69 @@
+@startuml Exception_UML
+title LDN --- Exception_v1.0.0
+
+namespace LDN {
+
+    ' Interface Exceptions
+    interface Exception {
+        # message : std::string
+        + getMessage() : std::string&
+        + print() : void
+    }
+
+    namespace exception {
+
+        ' -------------- Index Exception -------------
+        class Index {
+            + Index(msg : std::string&)
+        }
+        LDN.Exception <|-- Index
+
+        ' Test Function
+        annotation "throwIfIndexException(int,size_t)" as TF1 <<function>>
+        LDN.exception.Index <.. TF1 : <<throws>>
+
+        ' -------------- Size Exception --------------
+        class Size {
+            + Size(msg : std::string&)
+        }
+        LDN.Exception <|-- Size
+
+        ' Test Function
+        annotation "throwIfSizeException(size_t,size_t)" as TF2 <<function>>
+        LDN.exception.Size <.. TF2 : <<throws>>
+
+        ' -------------- File Exception --------------
+        class File {
+            + File(msg : std::string&)
+        }
+        LDN.Exception <|-- File
+
+        ' enum FileMode
+        enum FileMode {
+            Read
+            Write
+            IO
+        }
+
+        ' FileStream Concept
+        class FileStream <<concept>> {
+            {constraint} s.is_open(): bool
+        }
+
+        ' Test Function
+        annotation "throwIfFileException(FileStream,std::string&,FileMode)" as TF_3_1 <<function>>
+        LDN.exception.File <.. TF_3_1 : <<throws>>
+        LDN.exception.FileStream <-- TF_3_1
+        LDN.exception.FileMode <-- TF_3_1
+
+        ' Test Function
+        annotation "throwIfFileException(File*,std::string&,FileMode)" as TF_3_2 <<function>>
+        LDN.exception.File <.. TF_3_2 : <<throws>>
+        LDN.exception.FileMode <-- TF_3_2
+
+    }
+
+}
+
+
+@enduml

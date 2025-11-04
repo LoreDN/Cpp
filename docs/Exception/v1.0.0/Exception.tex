@@ -1,0 +1,328 @@
+\documentclass[a4paper, 10pt]{article}
+
+% import packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tocloft}
+\usepackage{varwidth}
+\usepackage{listings}
+
+% margin settings
+\setlength{\oddsidemargin}{0pt}
+\setlength{\evensidemargin}{0pt}
+\setlength{\topmargin}{0pt}
+\setlength{\headheight}{0pt}
+\setlength{\textwidth}{16cm}
+\setlength{\textheight}{24cm}
+
+% table of contents settings
+\setlength{\cftbeforesecskip}{0.5cm}
+\setlength{\cftbeforesubsecskip}{0.25cm}
+
+% command \link definition
+\newcommand{\link}[1]{\textcolor{blue!80}{\underline{\href{#1}{#1}}}}
+
+% command \code definition
+\newcommand{\code}[1]{\colorbox{gray!20}{\texttt{#1}}}
+
+% command \libcategory definition
+\newcommand{\libcategory}[1]{
+
+    \begin{minipage}{\textwidth}
+        
+        \noindent \par \centering
+        \phantomsection \addcontentsline{toc}{subsection}{#1} 
+        {\color{green!80} \rule{\textwidth}{1pt}} \par \vspace{0.6em}
+        {\large \color{green!80} #1} \\[0.2em]
+        {\color{green!80} \rule{\textwidth}{1pt}} \par \vspace{0.4em}
+
+    \end{minipage}
+
+}
+
+% command \libfunction definition
+\newcommand{\libfunction}[1]{
+
+    \par \noindent
+    \begin{minipage}{\textwidth}
+        
+        \noindent \centering \par \vspace{0.75cm}
+        {\small \colorbox{black}{\textcolor{white}{\texttt{#1}}}}
+
+    \end{minipage} \vspace{0.15cm}
+
+}
+
+% command \libclass definition
+\newcommand{\libclass}[1]{
+
+    \vspace{0.75cm} \par \noindent
+    \makebox[\textwidth][c]{
+
+        \setlength{\fboxrule}{0pt}
+        \setlength{\fboxsep}{8pt}
+        \fcolorbox{black}{black}{
+
+            \begin{varwidth}{\textwidth}
+                
+                \textcolor{white}{\texttt{#1}}
+                
+            \end{varwidth}
+
+        }
+
+    } \par \vspace{0.5cm}
+
+}
+
+% command \midtilde definition
+\DeclareRobustCommand{\midtilde}{\raisebox{-0.75ex}{\textasciitilde}}
+
+% pagestyle setting
+\makeatletter
+
+    \def \ps@plain{
+
+        \let \@oddhead \@empty \@evenhead \@empty
+        \def \@oddfoot{
+
+            {\color{black!70} \makebox[0pt][l]{Code Documentation}} \hfil
+            {\color{black!70} \makebox[0pt][c]{C++ --- Exception}} \hfil
+            {\color{black!70} \thepage}
+        
+        } \def \@evenfoot{\@oddfoot}
+
+    }
+
+\makeatother \pagestyle{plain}
+
+% Start of the documentation
+\begin{document}
+
+    % First Page
+    \begin{minipage}{\textwidth}
+        
+        \centering 
+        \underline{Github:} LoreDN \\[0.2em]
+        \underline{Author:} Lorenzo Di Napoli \\[0.2em]
+        \underline{Repository:} \href{https://github.com/LoreDN/Cpp}{https://github.com/LoreDN/Cpp} \\[0.5em] 
+
+        \rule{\textwidth}{1pt} \par \vspace{0.7em}
+        {\Huge Exception\_v1.0.0 --- Documentation} \\[0.5em]
+        \rule{\textwidth}{1pt} \par \vspace{0.5em}
+        
+    \end{minipage}
+
+    \tableofcontents
+
+    % Library Description
+    \pagebreak
+    \section*{Library Description} \addcontentsline{toc}{section}{Library Description}
+
+        This library is a special one, because it is the foundation that allows all the other \textbf{LDN} libraries to work the intended way. \\[0.2em]
+        Here are collected all the custom \textbf{Exceptions} that can be triggered when working with the libraries, togheter with some test functions, used in order to catch 
+        the wanted \textbf{Exception}. \vspace{0.5cm}
+
+        \subsection*{\normalsize CONTENTS OF THE LIBRARY} \addcontentsline{toc}{subsection}{CONTENTS OF THE LIBRARY}
+
+            This library is \textit{header-only}, since the methods and functions implemented are really short. \\[0.2em]
+            In this way, the library can be used easily without the need to link external shared-library files \textit{.so}. \\[0.2em]
+            The only precaution to take when compiling the library headers, is to set the flag \textbf{-std=c++20}, since it is needed in order to work properly. \\[0.4cm]
+            The library is divided in multiple headers:
+            \begin{itemize}
+
+                \item \textbf{"IF\_Exception.hpp":} here is defined the Interface \code{LDN::Exception}, which is the Polimorphic Abstract Class all the Exceptions implements.
+                \item \textbf{"Exceptions.hpp":} the generic header, which includes all the Exceptions (it has been designed in order to be included alone).
+                \item \textbf{"\textit{Specification}.hpp":} the headers of the Specific Classes, each specification has its own one (such as the \code{LDN::exception::Index} Class 
+                    which is defined in the header \textit{"Index.hpp"}).
+
+            \end{itemize} \vspace{0.5cm}
+
+        \subsection*{\normalsize INHERITARY STRUCTURE} \addcontentsline{toc}{subsection}{INHERITARY STRUCTURE}
+
+            The library starts with the definition of an Interface, represented by a simple abstract class: \textit{"Exception"}. \\[0.2em]
+            Starting from this class, all the derivated ones create a Tree Structure, which allows to manage in a simple way all the \textbf{Exceptions}, and makes easy including 
+            new ones or derivating more specific \textbf{Exceptions} from already existing ones.
+
+    % Functions Documentation
+    \pagebreak
+    \section*{Classes Documentation} \addcontentsline{toc}{section}{Classes Documentation}
+
+        In the \textit{"Exception"} library have been implemented a total of four classes:
+        \begin{enumerate}
+            
+            \item[IF.] \textbf{LDN::Exception:} the Root Interface, from which all the other Exceptions derive from.
+            \item \textbf{LDN::exception::Index:} handles out-of-memory limit acceses for a Data-Structure (as accessing to \code{array[i > size]}).
+            \item \textbf{LDN::exception::Size:} handles Data-Structure size limits (as pushing an element to an Heap with \code{heap.usage == heap.size}).
+            \item \textbf{LDN::exception::File:} handles filestreams and checks if they are valid (works also with \code{FILE*}).
+
+        \end{enumerate}
+
+        \pagebreak
+        \libcategory{IF. Exception}
+
+            \libclass{class Exception \{ \\[0.4cm]
+                \textcolor{black}{.} \quad protected: \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // attributes \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad std::string message; \\[0.4cm]
+                \textcolor{black}{.} \quad public: \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // constructor / destructor \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad explicit Exception(const std::string\& msg) : message(msg) \{\} \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad virtual \midtilde Exception() noexcept = default; \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // getter \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad inline const std::string\& getMessage() const noexcept \{ return message; \} \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // Default Method --- Print Exception message \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad virtual void print(std::ostream\& exc\_stream = std::cerr) const \{ \\[0.2em]
+                    \textcolor{black}{.} \qquad \qquad \quad exc\_stream << "[Exception]: " << message << std::endl; \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad \} \\[0.4cm]
+                \};
+            }
+                
+                \libfunction{std::string message;} \noindent
+                The Exception message, it is a \textit{protected} member, since the user is not able to modify it. \\[0.2em]
+                This allows each \textbf{Exception} to manage its error message indipendently from the others.
+
+                \libfunction{explicit Exception(const std::string\& msg);} \noindent
+                This is the \textit{constructor}, which assignes a string \code{msg} (usually set when catching the \textbf{Exceptions}, in order to proper describe it) to the \textit{protected} 
+                member \code{Exception.message}.
+
+                \libfunction{virtual \midtilde Exception() noexcept = default;} \noindent
+                This is the \textit{destructor}, which is automatically invocated when deleting the object. \\[0.2em]
+                It has been left as a \textit{virtual method}, in order to ensure the Class to be abstract.
+
+                \libfunction{virtual void print(std::ostream\& exc\_stream = std::cerr) const;} \noindent
+                Core of the \textit{"Exception"} Interface, this \textit{virtual method} imposes that each \textbf{Exceptions} prints something in order to let the user know it was catched, 
+                (by default it prints the message). \\[0.2em]
+                It is already define as a default method, however since it has been left as a \textit{virtual method}, each \textbf{Exception} is able to modify it with an Override; this is not the 
+                case in the already implemented Classes, given in the library.
+
+        \pagebreak
+        \libcategory{1. Index}
+
+            \libclass{class Index : public LDN::Exception \{ \\[0.4cm]
+                \textcolor{black}{.} \quad public: \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // constructor / destructor \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad explicit Index(const std::string\& msg) : LDN::Exception("[Index Exception] \\[0.2em]
+                    \textcolor{black}{.} \qquad \qquad \quad --> " + msg) \{\} \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad \midtilde Index() noexcept override = default; \\[0.4cm]    
+                \}; \\[0.4cm] 
+                // Utility function to check index validity and throw Index exception if invalid \\[0.2em]
+                inline void throwIfIndexException(int index, size\_t size) \{ \\[0.2em]
+                    \textcolor{black}{.} \quad if (index < 0 || static\_cast<size\_t>(index) >= size) \{ \\[0.2em]
+                        \textcolor{black}{.} \qquad \quad throw LDN::exceptions::Index("Index " + std::to\_string(index) + " is out of \\[0.2em]
+                        \textcolor{black}{.} \qquad \qquad \quad bounds for size " + std::to\_string(size) + "!!!"); \\[0.2em]
+                    \textcolor{black}{.} \quad \} \\[0.2em]
+                \} 
+            }
+
+                \libfunction{explicit Index(const std::string\& msg);} \noindent
+                This is the \textit{constructor}, which assignes a string \code{msg} (set when catching the \textbf{Exception}, in order to proper describe it) to the \textit{protected} 
+                member \code{Exception.message}, specifing that it is an \code{[Index Exception]}.
+
+                \libfunction{\midtilde Index() noexcept override = default;} \noindent
+                This is the \textit{destructor}, which is automatically invocated when deleting the object.
+
+                \libfunction{inline void throwIfIndexException(int index, size\_t size);} \noindent
+                Test function independent from the \textbf{Index} class, which allows to catch the \textbf{Exception}. \\[0.2em]
+                The test throws the \textbf{Exception} only if there is an attempt to access out-of-bounds memory; it is checked by a simple \code{if (index < 0 || index >= size)}.
+
+        \pagebreak
+        \libcategory{2. Size}
+
+            \libclass{class Size : public LDN::Exception \{ \\[0.4cm]
+                \textcolor{black}{.} \quad public: \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // constructor / destructor \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad explicit Size(const std::string\& msg) : LDN::Exception("[Size Exception] \\[0.2em]
+                    \textcolor{black}{.} \qquad \qquad \quad --> " + msg) \{\} \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad \midtilde Size() noexcept override = default; \\[0.4cm]    
+                \}; \\[0.4cm] 
+                // Utility function to check Data-Structure usage and and throw Size Exception if full \\[0.2em]
+                inline void throwIfSizeException(size\_t size, size\_t limit) \{ \\[0.2em]
+                    \textcolor{black}{.} \quad if (size >= limit) \{ \\[0.2em]
+                        \textcolor{black}{.} \qquad \quad throw LDN::exceptions::Size("Size " + std::to\_string(size) + " is out of \\[0.2em]
+                        \textcolor{black}{.} \qquad \qquad \quad bounds for the maximum limit " + std::to\_string(limit) + "!!!"); \\[0.2em]
+                    \textcolor{black}{.} \quad \} \\[0.2em]
+                \} 
+            }
+
+                \libfunction{explicit Size(const std::string\& msg);} \noindent
+                This is the \textit{constructor}, which assignes a string \code{msg} (set when catching the \textbf{Exception}, in order to proper describe it) to the \textit{protected} 
+                member \code{Exception.message}, specifing that it is an \code{[Size Exception]}.
+
+                \libfunction{\midtilde Size() noexcept override = default;} \noindent
+                This is the \textit{destructor}, which is automatically invocated when deleting the object.
+
+                \libfunction{inline void throwIfSizeException(size\_t size, size\_t limit);} \noindent
+                Test function independent from the \textbf{Size} class, which allows to catch the \textbf{Exception}. \\[0.2em]
+                The test throws the \textbf{Exception} only if there is an attempt to expand an already full Data-Structure; it is checked by a simple \code{if (size >= limit)}.
+
+        \pagebreak
+        \libcategory{3. File}
+
+            \libclass{class File : public LDN::Exception \{ \\[0.4cm]
+                \textcolor{black}{.} \quad public: \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // constructor / destructor \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad explicit File(const std::string\& msg) : LDN::Exception("[File Exception] \\[0.2em]
+                    \textcolor{black}{.} \qquad \qquad \quad --> " + msg) \{\} \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad \midtilde File() noexcept override = default; \\[0.4cm]    
+                \}; \\[0.4cm]
+                // File modes \\[0.2em]
+                enum class FileMode \{ Read, Write, IO \}; \\[0.4cm]
+                // Concept to check if a type is a File stream \\[0.2em]
+                template <typename Stream> \\[0.2em]
+                concept FileStream = requires(Stream s) \{\{s.is\_open()\} -> std::convertible\_to<bool>;\}; \\[0.4cm]
+                // Utility function to check FileStream validity and throw File exception if invalid \\[0.2em]
+                inline void throwIfFileException(Stream\& stream, const std::string\& path, FileMode mode) \{ \\[0.2em]
+                    \textcolor{black}{.} \quad if (!stream.is\_open()) \{ \\[0.2em]
+                        \textcolor{black}{.} \qquad \quad std::string prefix; \\[0.2em]
+                        \textcolor{black}{.} \qquad \quad switch (mode) \{ \\[0.2em]
+                            \textcolor{black}{.} \qquad \qquad \quad case FileMode::Read: \quad prefix = "Input"; \quad break; \\[0.2em]
+                            \textcolor{black}{.} \qquad \qquad \quad case FileMode::Write: \quad prefix = "Output";\quad break; \\[0.2em]
+                            \textcolor{black}{.} \qquad \qquad \quad case FileMode::IO: \quad prefix = "IO"; \quad break; \\[0.2em]
+                        \textcolor{black}{.} \qquad \quad \} \\[0.2em]
+                        \textcolor{black}{.} \qquad \quad throw LDN::exceptions::File(prefix + " file error: unable to open '" + path \\[0.2em]
+                        \textcolor{black}{.} \qquad \quad + "'!!!"); \\[0.2em]
+                    \textcolor{black}{.} \quad \} \\[0.2em]
+                \} \\[0.4cm]
+                // Overload from FileStream to C style FILE* \\[0.2em]
+                inline void throwIfFileException(File* file, const std::string\& path, FileMode mode) \{ \\[0.2em]
+                    \textcolor{black}{.} \quad if (!file) \{ \\[0.2em]
+                        \textcolor{black}{.} \qquad \quad std::string prefix; \\[0.2em]
+                        \textcolor{black}{.} \qquad \quad switch (mode) \{ \\[0.2em]
+                            \textcolor{black}{.} \qquad \qquad \quad case FileMode::Read: \quad prefix = "Input"; \quad break; \\[0.2em]
+                            \textcolor{black}{.} \qquad \qquad \quad case FileMode::Write: \quad prefix = "Output";\quad break; \\[0.2em]
+                            \textcolor{black}{.} \qquad \qquad \quad case FileMode::IO: \quad prefix = "IO"; \quad break; \\[0.2em]
+                        \textcolor{black}{.} \qquad \quad \} \\[0.2em]
+                        \textcolor{black}{.} \qquad \quad throw LDN::exceptions::File(prefix + " file error: unable to open '" + path \\[0.2em]
+                        \textcolor{black}{.} \qquad \quad + "'!!!"); \\[0.2em]
+                    \textcolor{black}{.} \quad \} \\[0.2em]
+                \}
+            }
+
+                \pagebreak
+                \libfunction{explicit File(const std::string\& msg);} \noindent
+                This is the \textit{constructor}, which assignes a string \code{msg} (set when catching the \textbf{Exception}, in order to proper describe it) to the \textit{protected} 
+                member \code{Exception.message}, specifing that it is an \code{[File Exception]}.
+
+                \libfunction{\midtilde File() noexcept override = default;} \noindent
+                This is the \textit{destructor}, which is automatically invocated when deleting the object.
+
+                \libfunction{enum class FileMode \{ Read, Write, IO \};} \noindent
+                Enumeration Class for the File Opening Mode (used for the \textbf{Exception message}).
+
+                \libclass{template <typename Stream> \\[0.2em]
+                    concept FileStream = requires(Stream s) \{ \{ s.is\_open() \} -> std::convertible\_to<bool>; \};
+                } \noindent
+                Concept which ensure that a \code{Stream} has a method \code{is\_open()}.
+                
+                \libfunction{inline void throwIfFileException(Stream\& stream, const std::string\& path, FileMode mode);} \noindent
+                Test function independent from the \textbf{File} class, which allows to catch the \textbf{Exception}. \\[0.2em]
+                The test throws the \textbf{Exception} only if there is an attempt to use a filestream which has not been open correctly; it is checked by a simple \code{if (!stream.is\_open())}.
+
+                \libfunction{inline void throwIfFileException(File* file, const std::string\& path, FileMode mode);} \noindent
+                Overload of the \code{throwIfFileException()} function which allows to use \code{File*} as arguments instead of \code{Stream}.
+
+\end{document}
