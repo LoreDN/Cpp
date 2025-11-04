@@ -17,3 +17,4 @@
 
 // Exceptions library
 #include "IF_Exception.hpp"
+#include "Index.hpp"
