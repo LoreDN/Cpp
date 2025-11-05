@@ -1,0 +1,45 @@
+# ===================== Exception/CMakeLists.txt =====================
+cmake_minimum_required(VERSION 3.15)
+project(LDN_Exception VERSION 1.0.0 LANGUAGES CXX)
+
+set(LIB_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../include/LDN/Exception")
+
+
+# ======================== Library Definition ========================
+add_library(LDN_Exception INTERFACE)
+target_include_directories(LDN_Exception INTERFACE "${LIB_INCLUDE_DIR}")
+target_compile_features(LDN_Exception INTERFACE cxx_std_20)
+
+
+# ======================= Library Installation =======================
+install(
+    DIRECTORY "${LIB_INCLUDE_DIR}/"
+    DESTINATION include/LDN
+    PATTERN "CHANGELOG.md" EXCLUDE
+)
+
+install(
+    FILES ${LIB_INCLUDE_DIR}/CHANGELOG.md
+    DESTINATION share/doc/LDN/Exception
+)
+
+
+# ========================= PACKAGING (CPack) ========================
+set(CPACK_PACKAGE_NAME "ldn-exception")
+set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
+set(CPACK_PACKAGE_CONTACT "lorenzo_dinapoli@icloud.com")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "LDN --- Exception handling library")
+set(CPACK_PACKAGE_DESCRIPTION "Exception handling library, used especially with other LDN libraries")
+set(CPACK_PACKAGE_VENDOR "Lorenzo Di Napoli")
+set(CPACK_GENERATOR "DEB")
+set(CPACK_PACKAGE_FILE_NAME "ldn-exception-v${PROJECT_VERSION}")
+
+include(CPack)
+
+
+# ========================== Generate .deb  ==========================
+add_custom_target(package_exception
+    COMMAND ${CMAKE_COMMAND} -S ${CMAKE_CURRENT_SOURCE_DIR} -B ${CMAKE_CURRENT_SOURCE_DIR}/temp -DCMAKE_INSTALL_PREFIX=/usr
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_SOURCE_DIR}/temp --target package
+    COMMAND /bin/sh -c "cp ${CMAKE_CURRENT_SOURCE_DIR}/temp/*.deb ${CMAKE_CURRENT_SOURCE_DIR}/../../dist/Exception || true"
+)
