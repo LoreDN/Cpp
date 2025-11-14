@@ -21,6 +21,17 @@ uml-Exception:
 	plantuml -tpdf docs/Exception/v1.0.0/Exception_UML.puml
 
 
+# ======================== Hash/CMakeLists.txt =======================
+doc-Hash:
+	pdflatex -output-directory=docs/Hash/v1.0.0 docs/Hash/v1.0.0/Hash.tex
+	pdflatex -output-directory=docs/Hash/v1.0.0 docs/Hash/v1.0.0/Hash.tex
+	rm -f docs/Hash/v1.0.0/Hash.aux docs/Hash/v1.0.0/Hash.log 
+	rm -f docs/Hash/v1.0.0/Hash.out docs/Hash/v1.0.0/Hash.toc
+
+uml-Hash:
+	plantuml -tpdf docs/Hash/v1.0.0/Hash_UML.puml
+
+
 # =================== Clean Rule --- build/lib/temp ==================
 clean:
 	rm -rf build/*/temp

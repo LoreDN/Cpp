@@ -1,0 +1,426 @@
+\documentclass[a4paper, 10pt]{article}
+
+% import packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tocloft}
+\usepackage{varwidth}
+\usepackage{listings}
+
+% margin settings
+\setlength{\oddsidemargin}{0pt}
+\setlength{\evensidemargin}{0pt}
+\setlength{\topmargin}{0pt}
+\setlength{\headheight}{0pt}
+\setlength{\textwidth}{16cm}
+\setlength{\textheight}{24cm}
+
+% table of contents settings
+\setlength{\cftbeforesecskip}{0.5cm}
+\setlength{\cftbeforesubsecskip}{0.25cm}
+
+% command \link definition
+\newcommand{\link}[1]{\textcolor{blue!80}{\underline{\href{#1}{#1}}}}
+
+% command \code definition
+\newcommand{\code}[1]{\colorbox{gray!20}{\texttt{#1}}}
+
+% command \libcategory definition
+\newcommand{\libcategory}[1]{
+
+    \begin{minipage}{\textwidth}
+        
+        \noindent \par \centering
+        \phantomsection \addcontentsline{toc}{subsection}{#1} 
+        {\color{green!80} \rule{\textwidth}{1pt}} \par \vspace{0.6em}
+        {\large \color{green!80} #1} \\[0.2em]
+        {\color{green!80} \rule{\textwidth}{1pt}} \par \vspace{0.4em}
+
+    \end{minipage}
+
+}
+
+% command \libfunction definition
+\newcommand{\libfunction}[1]{
+
+    \par \noindent
+    \begin{minipage}{\textwidth}
+        
+        \noindent \centering \par \vspace{0.75cm}
+        {\small \colorbox{black}{\textcolor{white}{\texttt{#1}}}}
+
+    \end{minipage} \vspace{0.15cm}
+
+}
+
+% command \libclass definition
+\newcommand{\libclass}[1]{
+
+    \vspace{0.75cm} \par \noindent
+    \makebox[\textwidth][c]{
+
+        \setlength{\fboxrule}{0pt}
+        \setlength{\fboxsep}{8pt}
+        \fcolorbox{black}{black}{
+
+            \begin{varwidth}{\textwidth}
+                
+                \textcolor{white}{\texttt{#1}}
+                
+            \end{varwidth}
+
+        }
+
+    } \par \vspace{0.5cm}
+
+}
+
+% command \midtilde definition
+\DeclareRobustCommand{\midtilde}{\raisebox{-0.75ex}{\textasciitilde}}
+
+% pagestyle setting
+\makeatletter
+
+    \def \ps@plain{
+
+        \let \@oddhead \@empty \@evenhead \@empty
+        \def \@oddfoot{
+
+            {\color{black!70} \makebox[0pt][l]{Code Documentation}} \hfil
+            {\color{black!70} \makebox[0pt][c]{C++ --- Hash}} \hfil
+            {\color{black!70} \thepage}
+        
+        } \def \@evenfoot{\@oddfoot}
+
+    }
+
+\makeatother \pagestyle{plain}
+
+% Start of the documentation
+\begin{document}
+
+    % First Page
+    \begin{minipage}{\textwidth}
+        
+        \centering 
+        \underline{Github:} LoreDN \\[0.2em]
+        \underline{Author:} Lorenzo Di Napoli \\[0.2em]
+        \underline{Repository:} \href{https://github.com/LoreDN/Cpp}{https://github.com/LoreDN/Cpp} \\[0.5em] 
+
+        \rule{\textwidth}{1pt} \par \vspace{0.7em}
+        {\Huge Hash\_v1.0.0 --- Documentation} \\[0.5em]
+        \rule{\textwidth}{1pt} \par \vspace{0.5em}
+        
+    \end{minipage}
+
+    \tableofcontents
+
+    % Library Description
+    \pagebreak
+    \section*{Library Description} \addcontentsline{toc}{section}{Library Description}
+
+        This library implements some usefull Hash-Table based Data-Structures, such as Hash-Sets. \\[0.2em]
+        In particolar, every \textbf{Hash-Structure} has been implemented following two different rules: \textbf{Open hashing} and \textbf{Close hashing}. \vspace{0.5cm}
+
+        \subsection*{\normalsize CONTENTS OF THE LIBRARY} \addcontentsline{toc}{subsection}{CONTENTS OF THE LIBRARY}
+
+            Since the Classes definitions have been made using templates, this is a \textit{header-only} library. \\[0.2em]
+            However, in order to be optimized for the most common uses, have also been build some shared-library files \textit{.so}, containing the
+            \textbf{explicit template instantations} of some primitive types. \\[0.2em]
+            The only precaution to take when compiling the library headers, is to set the flag \textbf{-std=c++20}, since it is needed in order to work properly. \\[0.4cm]
+            The library is divided in multiple headers:
+            \begin{itemize}
+
+                \item \textbf{"IF\_Hash.hpp":} here is defined the Interface \code{LDN::Hash}, with the derived Abstract Class \code{LDN::HashSet}, which is the Polimorphic 
+                    Abstract Class for the \textbf{Hash-Structure}.
+                \item \textbf{"Hash.hpp":} the generic header, which includes all the \textbf{Hash-Structure} (it has been designed in order to be included alone).
+                \item \textbf{"HashSet.hpp":} the header file whic implements the Specifications for the \code{LDN::HashSet} Abstract Class.
+                \item \textbf{"\textit{Specification}.tpp":} template implementation for the Specification Classes (such as \code{LDN::hash\_set::Open}).
+
+            \end{itemize} \vspace{0.5cm}
+
+        \subsection*{\normalsize INHERITARY STRUCTURE} \addcontentsline{toc}{subsection}{INHERITARY STRUCTURE}
+
+            The library starts with the definition of an Interface, represented by a simple abstract class: \textit{"Hash"}. \\[0.2em]
+            Starting from this class, all the derivated ones create a Tree Structure, which allows to manage in a simple way all the Abstract \textbf{Hash-Structure}, and makes easy including 
+            new ones or derivating more Specifications for the already existing ones. \vspace{0.5cm}
+
+        \subsection*{\normalsize ITERATOR IMPLEMENTATION} \addcontentsline{toc}{subsection}{ITERATOR IMPLEMENTATION}
+
+            In order to be used in a simple and secure way, the \code{LDN::HashSet} Class has been implemented as an \textit{Iterator}, both via Polimorphism and via Specification.
+
+    % Functions Documentation
+    \pagebreak
+    \section*{Classes Documentation} \addcontentsline{toc}{section}{Classes Documentation}
+
+        In the \textit{"Hash"} library have been implemented a total of four classes:
+        \begin{enumerate}
+            
+            \item[IF.] \textbf{LDN::Hash:} the Root Interface, from which all the other \textbf{Hash-Structure} derive from.
+            \item \textbf{LDN::HashSet:} Abstract Class which defines an Hash-Set Data-Structure.
+            \begin{enumerate}
+                \item \textbf{LDN::hash\_set::Open:} Hash-Set with Open hashing rule.
+                \item \textbf{LDN::hash\_set::Close:} Hash-Set with Close hashing rule.
+            \end{enumerate}
+
+        \end{enumerate}
+
+        \pagebreak
+        \libcategory{IF. Hash}
+
+            \libclass{template <typename TYPE> \\[0.2em]
+                class Hash \{ \\[0.4cm]
+                \textcolor{black}{.} \quad protected: \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // attributes \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad size\_t size; \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad size\_t elements; \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad //Method --- Hash Function \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad virtual const size\_t hash(const TYPE\& key) const noexcept = 0; \\[0.4cm]
+                \textcolor{black}{.} \quad public: \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // constructor / destructor \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad explicit Hash(const size\_t\& sz) : size(sz), elements(0) \{\} \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad virtual \midtilde Hash() noexcept = default; \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // getters \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad inline const size\_t\& getSize() const noexcept \{ return this->size; \} \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad inline const size\_t\& getElements() const noexcept \{ return this->elements; \} \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // Methods --- clear / contains / toString \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad virtual void clear() noexcept = 0; \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad virtual bool contains(const TYPE\& key) const noexcept = 0; \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad virtual std::string toString() const noexcept = 0; \\[0.4cm]
+                \}; \\[0.4cm]
+                // output stream operator << \\[0.2em]
+                template <typename TYPE> \\[0.2em]
+                inline std::ostream\& operator<<(std::ostream\& out\_stream, const LDN::Hash<TYPE>\& hash) \{ \\[0.2em]
+                    \textcolor{black}{.} \quad out\_stream << hash.toString(); \\[0.2em]
+                    \textcolor{black}{.} \quad return out\_stream; \\[0.2em]
+                \}
+            }
+                
+                \libfunction{size\_t size;} \noindent
+                The \textbf{Hash-Structure} size, it is a \textit{protected} member, since the user is not able to modify it.
+
+                \libfunction{size\_t elements;} \noindent
+                The number of elements currently stored in the \textbf{Hash-Structure}, it is a \textit{protected} member, since the user is not able to modify it.
+
+                \pagebreak
+                \libfunction{explicit Hash(const size\_t\& sz);} \noindent
+                This is the \textit{constructor}, which assignes a size\_t \code{sz} to the \textit{protected} member \code{Hash.size}, then sets to 0 the \textit{protected} member \code{Hash.elements}.
+
+                \libfunction{virtual \midtilde Hash() noexcept = default;} \noindent
+                This is the \textit{destructor}, which is automatically invocated when deleting the object. \\[0.2em]
+                It has been left as a \textit{virtual method}, in order to ensure the Class to be abstract.
+
+                \libfunction{virtual void clear() noexcept = 0;} \noindent
+                This \textit{virtual method} imposes that each \textbf{Hash-Structure} has to provide a method to clean itself.
+                
+                \libfunction{virtual bool contains(const TYPE\& key) const noexcept = 0;} \noindent
+                This \textit{virtual method} imposes that each \textbf{Hash-Structure} has to provide a method to check if an element is stored.
+                
+                \libfunction{virtual std::string toString() const noexcept = 0;} \noindent
+                This \textit{virtual method} imposes that each \textbf{Hash-Structure} has to provide a method to be printed correctly.
+
+                \libfunction{inline std::ostream\& operator<<(std::ostream\& out\_stream, const LDN::Hash<TYPE>\& hash);} \noindent
+                Operator related to every \textbf{Hash-Structure}, which allows to print it via \code{std::ostream} using its method \code{Hash.toString()}.
+
+        \pagebreak
+        \libcategory{1. HashSet}
+
+            \libclass{template <typename TYPE> \\[0.2em]
+                class HashSet : public Hash<TYPE> \{ \\[0.4cm]
+                \textcolor{black}{.} \quad public: \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // constructor / destructor \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad explicit HashSet(const size\_t\& sz) : Hash<TYPE>(sz) \{\} \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad virtual \midtilde HashSet() noexcept = default; \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // Methods --- insert / remove / resize /loadFactor \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad virtual void insert(const TYPE\& key) = 0; \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad virtual void insert(const TYPE\& key) noexcept = 0; \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad virtual void resize() noexcept = 0; \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad inline const double loadFactor() const \{ \\[0.2em]
+                        \textcolor{black}{.} \qquad \qquad \quad return static\_cast<double>(this->elements) / static\_cast<double>(this->size); \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad \} \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // ------------------------- Iterator Interface ------------------------- \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad ... \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // Iterator Methods --- begin / end \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad virtual Iterator begin() noexcept = 0; \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad virtual Iterator end() noexcept = 0; \\[0.4cm]
+                \};
+            }
+
+                \libfunction{explicit HashSet(const size\_t\& sz);} \noindent
+                This is the \textit{constructor}, which calls back the constructor of the Interface \code{LDN::Hash<TYPE>}.
+
+                \libfunction{virtual \midtilde HashSet() noexcept = default;} \noindent
+                This is the \textit{destructor}, which is automatically invocated when deleting the object. \\[0.2em]
+                It has been left as a \textit{virtual method}, in order to ensure the Class to be abstract.
+
+                \libfunction{virtual void insert(const TYPE\& key) = 0;} \noindent
+                This \textit{virtual method} imposes that each \textbf{Hash-Set} has to provide a method to insert and store correctly a key (if possible).
+                
+                \libfunction{virtual void remove(const TYPE\& key) noexcept = 0;} \noindent
+                This \textit{virtual method} imposes that each \textbf{Hash-Set} has to provide a method to remove a key (if already stored).
+                
+                \pagebreak
+                \libfunction{virtual void resize() noexcept = 0;} \noindent
+                This \textit{virtual method} imposes that each \textbf{Hash-Set} has to provide a method to resize itself.
+
+                \libfunction{inline const double loadFactor() const} \noindent
+                Method which allows to calculate the current \textit{load factor} of the \textbf{Hash-Set}.
+
+                \libfunction{// ------------------------- Iterator Interface -------------------------} \noindent
+                Technical implementation of the \textbf{Hash-Set} as an \textit{Iterator}, if you want to see the technicalities, check the \textit{header "IF\_Hash.hpp"}.
+
+                \libclass{virtual Iterator begin() noexcept = 0; \\[0.2em]
+                    virtual Iterator end() noexcept = 0;} \noindent
+                Method which allows the \textbf{Hash-Set} to be used as an \textit{Iterator}, the user does not need to call them directly. \\[0.2em]
+                They have been left as \textit{virtual methods} since the implementation differs depending on the Specification.
+
+        \pagebreak
+        \libcategory{1.1 HashSet --> Open}
+
+            \libclass{template <typename TYPE> \\[0.2em]
+                class Open : public LDN::HashSet<TYPE> \{ \\[0.4cm]
+                \textcolor{black}{.} \quad private: \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // helper Bucket definition \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad struct Bucket\{ \\[0.4cm]
+                        \textcolor{black}{.} \qquad \qquad \quad TYPE value; \\[0.2em]
+                        \textcolor{black}{.} \qquad \qquad \quad struct Bucket* next; \\[0.4cm]
+                        \textcolor{black}{.} \qquad \qquad \quad explicit Bucket(const TYPE\& key): value(key), next(nullptr) \{\} \\[0.2em]
+                        \textcolor{black}{.} \qquad \qquad \quad \midtilde Bucket() noexcept = default; \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad \}; \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad// attributes \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad std::unique\_ptr<Bucket*[]> table; \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // Method --- Hash Function \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad const size\_t hash(const TYPE\& key) const noexcept override; \\[0.4cm]
+                \textcolor{black}{.} \quad public: \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // constructor / destructor \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad explicit Open(const size\_t\& sz); \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad \midtilde Open() noexcept override; \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // Hash Methods --- implementation \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad ... \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // HashSet Methods --- implementation \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad ...\\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // ------------------------- Iterator Implementation ------------------------- \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad ... \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // Iterator Methods --- begin / end \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad LDN::HashSet<TYPE>::Iterator begin() noexcept override \{ \\[0.2em]
+                        \textcolor{black}{.} \qquad \qquad \quad SpecificationIterator it(this->table.get(), this->size, 0); \\[0.2em]
+                        \textcolor{black}{.} \qquad \qquad \quad return typename LDN::HashSet<TYPE>::Iterator(it.clone()); \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad \} \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad LDN::HashSet<TYPE>::Iterator end() noexcept override \{ \\[0.2em]
+                        \textcolor{black}{.} \qquad \qquad \quad SpecificationIterator it(this->table.get(), this->size, this->size); \\[0.2em]
+                        \textcolor{black}{.} \qquad \qquad \quad return typename LDN::HashSet<TYPE>::Iterator(it.clone()); \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad \} \\[0.4cm]
+                \};
+            }
+
+                \libfunction{struct Bucket\{...\};} \noindent
+                Definition of an helper struct \code{LDN::hash\_set::Open::Bucket}, private to the \textbf{Hash-Set} Specification, which allows to use the Hash-Structure with 
+                chaining (following the \textbf{Open hashing} rule).
+
+                \libfunction{std::unique\_ptr<Bucket*[]> table;} \noindent
+                Implementation of the Hash-Table used for the \textbf{Hash-Set}, it has been used a \code{std::unique\_ptr<>} in order to keep the user from accessing the table 
+                directly (due to the concept of \textbf{Hash-Set}).
+
+                \libfunction{const size\_t hash(const TYPE\& key) const noexcept override;} \noindent
+                Implementation of the \textit{hash function}, it is based on the standard-library struct \code{std::hash<>}, allowing correct and complete management of the 
+                hashing rule following \textbf{C++} standard.
+
+                \libfunction{explicit Open(const size\_t\& sz);} \noindent
+                This is the \textit{constructor}, which calls back the constructor of the Generalization \code{LDN::HashSet<TYPE>} and makes an unique Hash-Table.
+
+                \libfunction{\midtilde Open() noexcept override;} \noindent
+                This is the \textit{destructor}, which is automatically invocated when deleting the object.
+
+                \libfunction{// Hash Methods --- implementation} \noindent
+                Implementation of the Methods declared by the Interface \code{LDN::Hash<TYPE>}.
+
+                \libfunction{// HashSet Methods --- implementation} \noindent
+                Implementation of the Methods declared by the Generalization \code{LDN::HashSet<TYPE>}.
+                
+                \libfunction{// ------------------------- Iterator Implementation -------------------------} \noindent
+                Technical implementation of the \textbf{Hash-Set} as an \textit{Iterator}, if you want to see the technicalities, check the \textit{header "HashSet.hpp"}.
+
+                \libclass{LDN::HashSet<TYPE>::Iterator begin() noexcept override; \\[0.2em]
+                    LDN::HashSet<TYPE>::Iterator end() noexcept override;} \noindent
+                Method which allows the \textbf{Hash-Set} to be used as an \textit{Iterator}, the user does not need to call them directly. \\[0.2em]
+                They implement the Polimorphic \textbf{Hash-Set} ones, so that both Generalization and Specification can be used as \textit{Iterators}.
+
+        \pagebreak
+        \libcategory{1.2 HashSet --> Close}
+
+            \libclass{template <typename TYPE> \\[0.2em]
+                class Close : public LDN::HashSet<TYPE> \{ \\[0.4cm]
+                \textcolor{black}{.} \quad private: \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // helper fake-constants declaration \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad TYPE EMPTY; \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad TYPE TOMBSTONE; \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // attributes \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad std::unique\_ptr<TYPE[]> table; \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad bool quadratic; \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // Method --- Hash Function \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad const size\_t hash(const TYPE\& key) const noexcept override; \\[0.4cm]
+                \textcolor{black}{.} \quad public: \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // constructor / destructor \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad explicit Close(const size\_t\& sz, bool probing, TYPE empty, TYPE tombstone); \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad \midtilde Close() noexcept override = default; \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // Hash Methods --- implementation \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad ... \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // HashSet Methods --- implementation \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad ...\\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // ------------------------- Iterator Implementation ------------------------- \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad ... \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // Iterator Methods --- begin / end \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad LDN::HashSet<TYPE>::Iterator begin() noexcept override \{...\} \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad LDN::HashSet<TYPE>::Iterator end() noexcept override \{...\} \\[0.4cm]
+                \};
+            }
+
+                \pagebreak
+                \libfunction{TYPE EMPTY;} \noindent
+                Declaration of an helper fake-constant, private to an istance of the \textbf{Hash-Set} Specification, which allows to use the Hash-Structure as a single array 
+                (following the \textbf{Close hashing} rule). \\[0.2em]
+                It is set by the \textit{constructor}.
+
+                \libfunction{TYPE TOMBSTONE;} \noindent
+                Declaration of an helper fake-constant, private to an istance of the \textbf{Hash-Set} Specification, which allows to use the Hash-Structure as a single array 
+                (following the \textbf{Close hashing} rule). \\[0.2em]
+                It is set by the \textit{constructor}.
+
+                \libfunction{std::unique\_ptr<TYPE[]> table;} \noindent
+                Implementation of the Hash-Table used for the \textbf{Hash-Set}, it has been used a \code{std::unique\_ptr<>} in order to keep the user from accessing the table 
+                directly (due to the concept of \textbf{Hash-Set}).
+
+                \libfunction{bool quadratic;} \noindent
+                Flag wich represents the method of probing (linear if set to \textit{false}, quadratic is set to \textit{true}).
+
+                \libfunction{const size\_t hash(const TYPE\& key) const noexcept override;} \noindent
+                Implementation of the \textit{hash function}, it is based on the standard-library struct \code{std::hash<>}, allowing correct and complete management of the 
+                hashing rule following \textbf{C++} standard.
+
+                \libfunction{explicit Close(const size\_t\& sz, bool probing, TYPE empty, TYPE tombstone);} \noindent
+                This is the \textit{constructor}, which calls back the constructor of the Generalization \code{LDN::HashSet<TYPE>} and makes an unique Hash-Table. \\[0.2em]
+                It also set for the only time the fake-constants \code{EMPTY} and \code{TOMBSTONE}.
+
+                \libfunction{\midtilde Close() noexcept override = default;} \noindent
+                This is the \textit{destructor}, which is automatically invocated when deleting the object. \\[0.2em]
+                It is set to default, since the \code{std::unique\_ptr<>} delete itself automatically, and there are no other deletions (like chaining-related ones).
+
+                \libfunction{// Hash Methods --- implementation} \noindent
+                Implementation of the Methods declared by the Interface \code{LDN::Hash<TYPE>}.
+
+                \libfunction{// HashSet Methods --- implementation} \noindent
+                Implementation of the Methods declared by the Generalization \code{LDN::HashSet<TYPE>}.
+                
+                \pagebreak
+                \libfunction{// ------------------------- Iterator Implementation -------------------------} \noindent
+                Technical implementation of the \textbf{Hash-Set} as an \textit{Iterator}, if you want to see the technicalities, check the \textit{header "HashSet.hpp"}.
+
+                \libclass{LDN::HashSet<TYPE>::Iterator begin() noexcept override; \\[0.2em]
+                    LDN::HashSet<TYPE>::Iterator end() noexcept override;} \noindent
+                Method which allows the \textbf{Hash-Set} to be used as an \textit{Iterator}, the user does not need to call them directly. \\[0.2em]
+                They implement the Polimorphic \textbf{Hash-Set} ones, so that both Generalization and Specification can be used as \textit{Iterators}.
+
+\end{document}

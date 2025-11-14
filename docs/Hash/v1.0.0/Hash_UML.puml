@@ -1,0 +1,55 @@
+@startuml Hash_UML
+title LDN --- Hash_v1.0.0
+
+namespace LDN {
+
+    ' Interface Hash
+    interface Hash<TYPE> {
+        # size : size_t
+        # elements : size_t
+        - hash(TYPE& key) : size_t
+        + getSize() : size_t&
+        + getElements() : size_t&
+        + clear() : void
+        + contains() : bool
+        + toString() : std::string
+    }
+
+    ' Operator <<
+    annotation "operator<<(hash : Hash<TYPE>)" as TOP <<operator>>
+    Hash <-- TOP
+
+    ' Abstract Class HashSet
+    abstract class HashSet<TYPE> <<iterator>> {
+        + insert(TYPE& key) : void
+        + remove(TYPE& key) : void
+        + resize() : void
+        + loadFactor() : double
+    }
+    Hash <|-- HashSet
+
+    namespace hash_set {
+
+        ' --------------- Open hashing ---------------
+        class Open<TYPE> {
+            - table : std::unique_ptr<>
+            + Open(sz : size_t&)
+        }
+        LDN.HashSet <|-- Open
+
+        ' --------------- Close hashing --------------
+        class Close<TYPE> {
+            - EMPTY : TYPE
+            - TOMBSTONE : TYPE
+            - table : std::unique_ptr<>
+            - quadratic : bool
+            + Close(sz : size_t&, probing : bool, empty : TYPE, tombstone : TYPE)
+        }
+        LDN.HashSet <|-- Close
+
+    }
+
+}
+
+
+@enduml
