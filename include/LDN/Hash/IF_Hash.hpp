@@ -52,7 +52,7 @@ namespace LDN {
         out_stream << hash.toString();
         return out_stream;
     }
-/*
+
 
     // ------------------------------------------ 2. Abstract Class HashSet ------------------------------------------
 
@@ -60,9 +60,67 @@ namespace LDN {
     template <typename TYPE>
     class HashSet : public Hash<TYPE> {
 
+        public:
+
+            // constructor / destructor
+            explicit HashSet(const size_t& sz) : Hash<TYPE>(sz) {}
+            virtual ~HashSet() noexcept = default;
+
+            // Methods --- insert / remove / resize /loadFactor
+            virtual void insert(const TYPE& key) = 0;
+            virtual void remove(const TYPE& key) noexcept = 0;
+            virtual void resize() noexcept = 0;
+            inline const double loadFactor() const {
+                return static_cast<double>(this->elements) / static_cast<double>(this->size);
+            }
+
+
+            // ------------------------- Iterator Interface -------------------------
+
+            // Abstract Struct AbstractIterator
+            struct AbstractIterator {
+                virtual ~AbstractIterator() = default;
+                virtual TYPE& deref() const = 0;
+                virtual void increment() = 0;
+                virtual bool equals(const AbstractIterator* other) const = 0;
+                virtual std::unique_ptr<AbstractIterator> clone() const = 0;
+            };
+
+            // Wrapper Class Iterator
+            class Iterator {
+                private:
+                
+                    // attribute
+                    std::unique_ptr<AbstractIterator> iterator_pointer;
+                
+                public:
+                    
+                    // constructor
+                    explicit Iterator(std::unique_ptr<AbstractIterator> p) : iterator_pointer(std::move(p)) {}
+
+                    // operators *Iterator / ++ / bool() / == / != / =
+                    TYPE& operator*() { return this->iterator_pointer->deref(); }
+                    Iterator& operator++() {this->iterator_pointer->increment(); return *this; }
+                    explicit operator bool() const noexcept { return static_cast<bool>(this->iterator_pointer); }
+                    bool operator==(const Iterator& other) const { return !(*this != other); }
+                    bool operator!=(const Iterator& other) const {
+                        if (!this->iterator_pointer && !other.iterator_pointer) return false;
+                        if (!this->iterator_pointer || !other.iterator_pointer) return true;
+                        return !this->iterator_pointer->equals(other.iterator_pointer.get());
+                    }
+                    Iterator& operator=(const Iterator& other) {
+                        iterator_pointer = (other.iterator_pointer) ? other.iterator_pointer->clone() : nullptr;
+                        return *this;
+                    }
+
+            };
+
+            // Iterator Methods --- begin / end
+            virtual Iterator begin() noexcept = 0;
+            virtual Iterator end() noexcept = 0;
 
     };
-
+/*
 
     // ------------------------------------------ 3. Abstract Class HashMap ------------------------------------------
 
