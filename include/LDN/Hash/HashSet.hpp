@@ -117,7 +117,104 @@ namespace LDN::hash_set {
 
     };
 
+    
+    // ------------------------------------------ 2. Hash-Set with Close hashing ------------------------------------------
+    template <typename TYPE>
+    class Close : public LDN::HashSet<TYPE> {
+
+        private:
+
+            // helper fake-constants declaration
+            TYPE EMPTY;
+            TYPE TOMBSTONE;
+
+            // attributes
+            std::unique_ptr<TYPE[]> table;
+            bool quadratic;
+
+            // Method --- Hash Function
+            const size_t hash(const TYPE& key) const noexcept override;
+
+        public:
+
+            // constructor / destructor
+            explicit Close(const size_t& sz, bool probing, TYPE empty, TYPE tombstone);
+            ~Close() noexcept override = default;
+
+            // Hash Methods --- implementation
+            void clear() noexcept override;
+            bool contains(const TYPE& key) const noexcept override;
+            std::string toString() const noexcept override;
+
+            // HashSet Methods --- implementation
+            void insert(const TYPE& key) override;
+            void remove(const TYPE& key) noexcept override;
+            void resize() noexcept override;
+
+
+            // ------------------------- Iterator Implementation -------------------------
+
+            // Class SpecificationIterator
+            class SpecificationIterator : public LDN::HashSet<TYPE>::AbstractIterator {
+                
+                private:
+                    
+                    // helper fake-constants declaration
+                    TYPE EMPTY;
+                    TYPE TOMBSTONE;
+
+                    // attributes
+                    TYPE* table;
+                    size_t size;
+                    size_t index;
+
+                public:
+
+                    // constructor
+                    SpecificationIterator(TYPE* t, size_t sz, size_t i, TYPE empty, TYPE tombstone) 
+                        : table(t), size(sz), index(i), EMPTY(empty), TOMBSTONE(tombstone) {
+                        this->skipEmpty();
+                    }
+
+                    // Method --- Skip Empty
+                    void skipEmpty() noexcept {
+                        while (this->index < this->size &&
+                                (this->table[this->index] == this->EMPTY
+                                || this->table[this->index] == this->TOMBSTONE)
+                        ) this->index++;
+                    }
+
+                    // AbstractIterator Methods --- implementation
+                    TYPE& deref() const override { return this->table[this->index]; }
+                    void increment() override {
+                        this->index++;
+                        this->skipEmpty();
+                    }
+                    bool equals(const LDN::HashSet<TYPE>::AbstractIterator* other) const override {
+                        auto other_iterator = dynamic_cast<const SpecificationIterator*>(other);
+                        if (!other_iterator) return false;
+                        return this->index == other_iterator->index && this->table == other_iterator->table;
+                    }
+                    std::unique_ptr<typename LDN::HashSet<TYPE>::AbstractIterator> clone() const override {
+                        return std::make_unique<SpecificationIterator>(this->table, this->size, this->index, this->EMPTY, this->TOMBSTONE);
+                    }
+
+            };
+
+            // Iterator Methods --- begin / end
+            LDN::HashSet<TYPE>::Iterator begin() noexcept override {
+                SpecificationIterator it(this->table.get(), this->size, 0, this->EMPTY, this->TOMBSTONE);
+                return typename LDN::HashSet<TYPE>::Iterator(it.clone());
+            }
+            LDN::HashSet<TYPE>::Iterator end() noexcept override {
+                SpecificationIterator it(this->table.get(), this->size, this->size, this->EMPTY, this->TOMBSTONE);
+                return typename LDN::HashSet<TYPE>::Iterator(it.clone());
+            }
+
+    };
+
 } // namespace LDN::hash_set
 
 // template implementations
 #include "impl/HashSet_Open.tpp"
+#include "impl/HashSet_Close.tpp"
