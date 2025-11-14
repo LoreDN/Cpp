@@ -4,7 +4,7 @@
 
 /* ---------------------------------------------------------------------------------------------------------------------------------
  *
- *  This library contains the definition of different Hash Classes.
+ *  This library contains the definition of different Hash Classes, such as Hash-Sets.
  *  The structure is based on the Interface "IF_Hash" ( as an abstract class "Hash"), which is implemented by 
  *  all the specific Hash-Data-Structures.
  *
@@ -19,3 +19,4 @@
 
 // Hash library
 #include "IF_Hash.hpp"
+#include "HashSet.hpp"
