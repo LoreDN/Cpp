@@ -1,7 +1,7 @@
 # ======================== General Build Rule ========================
-.PHONY: all Exception clean
+.PHONY: all Exception Hash clean
 
-all: Exception
+all: Exception Hash
 
 
 # ===================== Exception/CMakeLists.txt =====================
@@ -22,11 +22,11 @@ uml-Exception:
 
 
 # ======================== Hash/CMakeLists.txt =======================
-#Hash:
-#	mkdir -p build
-#	cmake -S include/LDN/Hash -B build -DCMAKE_INSTALL_PREFIX=/usr
-#	cmake --build build --target package_hash
-#	rm -rf build
+Hash:
+	mkdir -p build
+	cmake -S include/LDN/Hash -B build -DCMAKE_INSTALL_PREFIX=/usr
+	cmake --build build --target package_hash
+	rm -rf build
 
 doc-Hash:
 	pdflatex -output-directory=docs/Hash/v1.0.0 docs/Hash/v1.0.0/Hash.tex
