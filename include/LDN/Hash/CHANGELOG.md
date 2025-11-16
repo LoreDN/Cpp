@@ -13,7 +13,7 @@ The format follows the standard [Keep a Changelog](https://keepachangelog.com/it
 - Implemented Hash Abstract Class `LDN::HashSet` 
 - Implemented Specification Classes:
     - `LDN::hash_set::Open` for Hash-Sets with Open hashing
-    - `LDN::hash_set::Close` for Hash-Sets with Open hashing
+    - `LDN::hash_set::Close` for Hash-Sets with Close hashing
 - Operator << for Hash-Structures
 - Header-only implementation with C++20 support
 - Shared Library `libLDN_Hash.so` for Explicit Template Instantations
