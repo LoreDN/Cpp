@@ -6,10 +6,10 @@ all: Exception
 
 # ===================== Exception/CMakeLists.txt =====================
 Exception:
-	mkdir -p build/Exception/temp
-	cmake -S build/Exception -B build/Exception/temp -DCMAKE_INSTALL_PREFIX=/usr
-	cmake --build build/Exception/temp --target package_exception
-	rm -rf build/Exception/temp
+	mkdir -p build
+	cmake -S include/LDN/Exception -B build -DCMAKE_INSTALL_PREFIX=/usr
+	cmake --build build --target package_exception
+	rm -rf build
 
 doc-Exception:
 	pdflatex -output-directory=docs/Exception/v1.0.0 docs/Exception/v1.0.0/Exception.tex
@@ -22,6 +22,12 @@ uml-Exception:
 
 
 # ======================== Hash/CMakeLists.txt =======================
+#Hash:
+#	mkdir -p build
+#	cmake -S include/LDN/Hash -B build -DCMAKE_INSTALL_PREFIX=/usr
+#	cmake --build build --target package_hash
+#	rm -rf build
+
 doc-Hash:
 	pdflatex -output-directory=docs/Hash/v1.0.0 docs/Hash/v1.0.0/Hash.tex
 	pdflatex -output-directory=docs/Hash/v1.0.0 docs/Hash/v1.0.0/Hash.tex
@@ -34,4 +40,4 @@ uml-Hash:
 
 # =================== Clean Rule --- build/lib/temp ==================
 clean:
-	rm -rf build/*/temp
+	rm -rf include/LDN/*/build

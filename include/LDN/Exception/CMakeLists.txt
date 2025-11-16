@@ -2,7 +2,8 @@
 cmake_minimum_required(VERSION 3.15)
 project(LDN_Exception VERSION 1.0.0 LANGUAGES CXX)
 
-set(LIB_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../include/LDN/Exception")
+set(LIB_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+set(LIB_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../../build")
 
 
 # ======================== Library Definition ========================
@@ -16,6 +17,7 @@ install(
     DIRECTORY "${LIB_INCLUDE_DIR}/"
     DESTINATION include/LDN
     PATTERN "CHANGELOG.md" EXCLUDE
+    PATTERN "CMakeLists.txt" EXCLUDE
 )
 
 install(
@@ -39,7 +41,7 @@ include(CPack)
 
 # ========================== Generate .deb  ==========================
 add_custom_target(package_exception
-    COMMAND ${CMAKE_COMMAND} -S ${CMAKE_CURRENT_SOURCE_DIR} -B ${CMAKE_CURRENT_SOURCE_DIR}/temp -DCMAKE_INSTALL_PREFIX=/usr
-    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_SOURCE_DIR}/temp --target package
-    COMMAND /bin/sh -c "cp ${CMAKE_CURRENT_SOURCE_DIR}/temp/*.deb ${CMAKE_CURRENT_SOURCE_DIR}/../../dist/Exception || true"
+    COMMAND ${CMAKE_COMMAND} -S ${CMAKE_CURRENT_SOURCE_DIR} -B ${LIB_BUILD_DIR} -DCMAKE_INSTALL_PREFIX=/usr
+    COMMAND ${CMAKE_COMMAND} --build ${LIB_BUILD_DIR} --target package
+    COMMAND /bin/sh -c "cp ${LIB_BUILD_DIR}/*.deb ${LIB_BUILD_DIR}/../deb/Exception || true"
 )
