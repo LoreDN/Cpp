@@ -5,13 +5,13 @@ This repository is a collection of libraries and classes definitions for program
 
 ## ❓ How to use the repo
 The repo consist of different folders:
-- **build/ :** contains the CMakeLisst.txt files used for the package build.
-- **dist/ :** contains all the library versions as *.deb* packages.
-- **include/LDN/ :** contains the header files *.hpp* (it mirrors the installation path).
+- **docs/ :** documentation for every library, written both as *.pdf* and *UML*.
+- **include/LDN/ :** contains the header files *.hpp* and *.tpp* ( it mirrors the installation path ).
+- **src/ :** Explicit Template Instantations (ETI) for template-based libraries ( such as Hash ).
 - **test/ :** collection of some tests for the various libraries.
 
 ## ❗ Exceptions Handling
-In order to handle in the best way possible all the various exceptions that can occurre when using the libraries, has been designed a specific **exception-library** named `LDN::Exception`, which aims to be used as a support fro all the other libraries, in order to make them work correctly.<br>
+In order to handle in the best way possible all the various exceptions that can occurre when using the libraries, has been designed a specific **exception-library** named `LDN::Exception`, which aims to be used as a support for all the other libraries, in order to make them work correctly.<br>
 The `Exception` library contains some custom exceptions, as well as some functions to use in order to eventually catch them.<br>
 The library has been implemented in this way in order to make it easy to be used in all the other projects, however it is also avaible for common use, as well as all the other libraries ( if it is included in the project obviously ).
 <br>
@@ -39,7 +39,10 @@ Finally, in order to compile your program using the library, all you have left t
 
 ```bash
 # -I/usr/include/LDN adds the /usr/include/LDN/ folder to the include paths (you can also use #include <LDN/LIB>)
-g++ main.cpp -o program -I/usr/lib/LDN
+# -L/usr/lib/LDN adds the /usr/lib/LDN/ folder to the linking paths (in order to use the library -lLDN_LIB)
+
+# -lLIB indicates the library binary file, you have to change LIB with the wanted one (as Hash for -lLDN_Hash)
+g++ main.cpp -o program -I/usr/lib/LDN -L/usr/lib/LDN -lLDN_LIB
 ```
 
 <br>
@@ -55,6 +58,19 @@ The core of all the libraries collected in this repository, used in order to man
 # latest v1.0.0
 wget https://github.com/LoreDN/Cpp/releases/download/Exception_v1.0.0/ldn-exception-v1.0.0.deb
 sudo dpkg -i ldn-exception-v1.0.0.deb
+
+# update linker path
+echo "/usr/lib/LDN" | sudo tee /etc/ld.so.conf.d/ldn.conf
+sudo ldconfig
+```
+
+### 2. Hash
+Implementation of different Hash Data-Structures, for now have been implemented Hash-Sets with different hashing rules.
+
+```bash
+# latest v1.0.0
+wget https://github.com/LoreDN/Cpp/releases/download/Hash_v1.0.0/ldn-hash-v1.0.0.deb
+sudo dpkg -i ldn-hash-v1.0.0.deb
 
 # update linker path
 echo "/usr/lib/LDN" | sudo tee /etc/ld.so.conf.d/ldn.conf
