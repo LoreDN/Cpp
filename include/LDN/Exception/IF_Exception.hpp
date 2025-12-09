@@ -29,7 +29,7 @@ namespace LDN {
             virtual ~Exception() noexcept = default;
 
             // getter
-            inline const std::string& getMessage() const noexcept { return message; }
+            [[nodiscard]] inline const std::string& getMessage() const noexcept { return message; }
 
             // Default Method --- Print Exception message
             virtual void print(std::ostream& exc_stream = std::cerr) const {
