@@ -4,6 +4,10 @@ This file documents all the changes and updates of the library LDN::Exception.
 
 The format follows the standard [Keep a Changelog](https://keepachangelog.com/it/1.1.0/) and [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2025-12-09
+### Fixed
+- Add attributes [[ ]] to the getter of `LDN::Exception`
+
 ---
 
 ## [1.0.0] - 2025-11-05

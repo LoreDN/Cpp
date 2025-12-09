@@ -111,7 +111,7 @@
         \underline{Repository:} \href{https://github.com/LoreDN/Cpp}{https://github.com/LoreDN/Cpp} \\[0.5em] 
 
         \rule{\textwidth}{1pt} \par \vspace{0.7em}
-        {\Huge Exception\_v1.0.0 --- Documentation} \\[0.5em]
+        {\Huge Exception\_v1.0.1 --- Documentation} \\[0.5em]
         \rule{\textwidth}{1pt} \par \vspace{0.5em}
         
     \end{minipage}
@@ -173,7 +173,8 @@
                     \textcolor{black}{.} \qquad \quad explicit Exception(const std::string\& msg) : message(msg) \{\} \\[0.2em]
                     \textcolor{black}{.} \qquad \quad virtual \midtilde Exception() noexcept = default; \\[0.4cm]
                     \textcolor{black}{.} \qquad \quad // getter \\[0.2em]
-                    \textcolor{black}{.} \qquad \quad inline const std::string\& getMessage() const noexcept \{ return message; \} \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad [[nodiscard]] inline const std::string\& getMessage() const noexcept \\[0.2em]
+                    \textcolor{black}{.} \qquad \qquad \quad \{ return message; \} \\[0.4cm]
                     \textcolor{black}{.} \qquad \quad // Default Method --- Print Exception message \\[0.2em]
                     \textcolor{black}{.} \qquad \quad virtual void print(std::ostream\& exc\_stream = std::cerr) const \{ \\[0.2em]
                     \textcolor{black}{.} \qquad \qquad \quad exc\_stream << "[Exception]: " << message << std::endl; \\[0.2em]
@@ -193,6 +194,10 @@
                 This is the \textit{destructor}, which is automatically invocated when deleting the object. \\[0.2em]
                 It has been left as a \textit{virtual method}, in order to ensure the Class to be abstract.
 
+                \libfunction{[[nodiscard]] inline const std::string\& getMessage() const noexcept \{ return message; \}} \noindent
+                Getter for the attribute \code{Exception.message}.
+
+                \pagebreak
                 \libfunction{virtual void print(std::ostream\& exc\_stream = std::cerr) const;} \noindent
                 Core of the \textit{"Exception"} Interface, this \textit{virtual method} imposes that each \textbf{Exceptions} prints something in order to let the user know it was catched, 
                 (by default it prints the message). \\[0.2em]
@@ -250,7 +255,7 @@
 
                 \libfunction{explicit Size(const std::string\& msg);} \noindent
                 This is the \textit{constructor}, which assignes a string \code{msg} (set when catching the \textbf{Exception}, in order to proper describe it) to the \textit{protected} 
-                member \code{Exception.message}, specifing that it is an \code{[Size Exception]}.
+                member \code{Exception.message}, specifing that it is a \code{[Size Exception]}.
 
                 \libfunction{\midtilde Size() noexcept override = default;} \noindent
                 This is the \textit{destructor}, which is automatically invocated when deleting the object.
@@ -305,7 +310,7 @@
                 \pagebreak
                 \libfunction{explicit File(const std::string\& msg);} \noindent
                 This is the \textit{constructor}, which assignes a string \code{msg} (set when catching the \textbf{Exception}, in order to proper describe it) to the \textit{protected} 
-                member \code{Exception.message}, specifing that it is an \code{[File Exception]}.
+                member \code{Exception.message}, specifing that it is a \code{[File Exception]}.
 
                 \libfunction{\midtilde File() noexcept override = default;} \noindent
                 This is the \textit{destructor}, which is automatically invocated when deleting the object.

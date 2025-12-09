@@ -12,13 +12,13 @@ Exception:
 	rm -rf build
 
 doc-Exception:
-	pdflatex -output-directory=docs/Exception/v1.0.0 docs/Exception/v1.0.0/Exception.tex
-	pdflatex -output-directory=docs/Exception/v1.0.0 docs/Exception/v1.0.0/Exception.tex
-	rm -f docs/Exception/v1.0.0/Exception.aux docs/Exception/v1.0.0/Exception.log 
-	rm -f docs/Exception/v1.0.0/Exception.out docs/Exception/v1.0.0/Exception.toc
+	pdflatex -output-directory=docs/Exception/v1.0 docs/Exception/v1.0/Exception.tex
+	pdflatex -output-directory=docs/Exception/v1.0 docs/Exception/v1.0/Exception.tex
+	rm -f docs/Exception/v1.0/Exception.aux docs/Exception/v1.0/Exception.log 
+	rm -f docs/Exception/v1.0/Exception.out docs/Exception/v1.0/Exception.toc
 
 uml-Exception:
-	plantuml -tpdf docs/Exception/v1.0.0/Exception_UML.puml
+	plantuml -tpdf docs/Exception/v1.0/Exception_UML.puml
 
 
 # ======================== Hash/CMakeLists.txt =======================
