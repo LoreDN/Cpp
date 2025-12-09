@@ -1,6 +1,6 @@
 # ===================== Exception/CMakeLists.txt =====================
 cmake_minimum_required(VERSION 3.15)
-project(LDN_Exception VERSION 1.0.0 LANGUAGES CXX)
+project(LDN_Exception VERSION 1.0.1 LANGUAGES CXX)
 
 set(LIB_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 set(LIB_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../../build")
