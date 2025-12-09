@@ -28,7 +28,7 @@ namespace LDN {
             size_t elements;
 
             // Method --- Hash Function
-            virtual const size_t hash(const TYPE& key) const noexcept = 0;
+            [[nodiscard]] virtual const size_t hash(const TYPE& key) const noexcept = 0;
 
         public:
 
@@ -37,13 +37,13 @@ namespace LDN {
             virtual ~Hash() noexcept = default;
 
             // getters
-            inline const size_t& getSize() const noexcept { return this->size; }
-            inline const size_t& getElements() const noexcept { return this->elements; }
+            [[nodiscard]] inline const size_t& getSize() const noexcept { return this->size; }
+            [[nodiscard]] inline const size_t& getElements() const noexcept { return this->elements; }
 
             // Methods --- clear / contains / toString
             virtual void clear() noexcept = 0;
-            virtual bool contains(const TYPE& key) const noexcept = 0;
-            virtual std::string toString() const noexcept = 0;
+            [[nodiscard]] virtual bool contains(const TYPE& key) const noexcept = 0;
+            [[nodiscard]] virtual std::string toString() const noexcept = 0;
     };
 
     // output stream operator <<
@@ -70,7 +70,7 @@ namespace LDN {
             virtual void insert(const TYPE& key) = 0;
             virtual void remove(const TYPE& key) noexcept = 0;
             virtual void resize() noexcept = 0;
-            inline const double loadFactor() const {
+            [[nodiscard]] inline const double loadFactor() const {
                 return static_cast<double>(this->elements) / static_cast<double>(this->size);
             }
 
@@ -80,14 +80,15 @@ namespace LDN {
             // Abstract Struct AbstractIterator
             struct AbstractIterator {
                 virtual ~AbstractIterator() = default;
-                virtual TYPE& deref() const = 0;
+                [[nodiscard]] virtual TYPE& deref() const = 0;
                 virtual void increment() = 0;
-                virtual bool equals(const AbstractIterator* other) const = 0;
-                virtual std::unique_ptr<AbstractIterator> clone() const = 0;
+                [[nodiscard]] virtual bool equals(const AbstractIterator* other) const = 0;
+                [[nodiscard]] virtual std::unique_ptr<AbstractIterator> clone() const = 0;
             };
 
             // Wrapper Class Iterator
             class Iterator {
+
                 private:
                 
                     // attribute
@@ -99,7 +100,7 @@ namespace LDN {
                     explicit Iterator(std::unique_ptr<AbstractIterator> p) : iterator_pointer(std::move(p)) {}
 
                     // operators *Iterator / ++ / bool() / == / != / =
-                    TYPE& operator*() { return this->iterator_pointer->deref(); }
+                    [[nodiscard]] TYPE& operator*() { return this->iterator_pointer->deref(); }
                     Iterator& operator++() {this->iterator_pointer->increment(); return *this; }
                     explicit operator bool() const noexcept { return static_cast<bool>(this->iterator_pointer); }
                     bool operator==(const Iterator& other) const { return !(*this != other); }
@@ -121,12 +122,24 @@ namespace LDN {
 
     };
 /*
+    ################ FUTURE IMPLEMENTATION!!!!
 
     // ------------------------------------------ 3. Abstract Class HashMap ------------------------------------------
-
+    
     // Abstract Class HashMap
     template <typename KEY, typename TYPE>
     class HashMap : public Hash<KEY> {
+
+        public:
+
+            // constructor / destructor
+            explicit HashMap(const size_t& sz) : Hash<KEY>(sz) {}
+            virtual ~HashMap() noexcept = default;
+
+            // Methods --- insert / remove / loadFactor
+            virtual void insert(const KEY& key, const TYPE& value) noexcept = 0;
+            virtual void remove(const KEY& key) noexcept = 0;
+            virtual const TYPE& find(const KEY& key) const noexcept = 0;
 
     };
 */

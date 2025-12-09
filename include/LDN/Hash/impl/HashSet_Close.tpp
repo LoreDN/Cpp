@@ -20,7 +20,7 @@ namespace LDN::hash_set {
 
     // Method --- Hash Function
     template <typename TYPE>
-    const size_t Close<TYPE>::hash(const TYPE& key) const noexcept {
+    [[nodiscard]] const size_t Close<TYPE>::hash(const TYPE& key) const noexcept {
         size_t bucket = std::hash<TYPE>{}(key) % this->size;
         if (this->table[bucket] == this->EMPTY || this->table[bucket] == this->TOMBSTONE) return bucket;
         for(size_t step = 1; step < this->size; step++) {
@@ -46,7 +46,7 @@ namespace LDN::hash_set {
     
     // Method 1.2 --- Check if an element is in the Hash-Set
     template <typename TYPE>
-    bool Close<TYPE>::contains(const TYPE& key) const noexcept {
+    [[nodiscard]] bool Close<TYPE>::contains(const TYPE& key) const noexcept {
         size_t bucket = std::hash<TYPE>{}(key) % this->size;
         if (this->table[bucket] == key) return true;
         else if (this->table[bucket] == this->EMPTY) return false;
@@ -60,7 +60,7 @@ namespace LDN::hash_set {
 
     // Method 1.3 --- Convert the Hash-Set to a String
     template <typename TYPE>
-    std::string Close<TYPE>::toString() const noexcept {
+    [[nodiscard]] std::string Close<TYPE>::toString() const noexcept {
         std::ostringstream out_stream;
         for (size_t i = 0; i < this->size; ++i) {
             out_stream << "Bucket " << i << ":";
@@ -80,10 +80,10 @@ namespace LDN::hash_set {
     // Method 2.1 --- Insert a key in the Hash-Set
     template <typename TYPE>
     void Close<TYPE>::insert(const TYPE& key) {
-        if (this->contains(key)) return;
+        if (this->contains(key)) [[unlikely]] return;
         size_t bucket = this->hash(key);
-        if (bucket == static_cast<size_t>(-1)) throw LDN::exceptions::Size("No avaiable Bucket has been found in the Hash-Set!!!");
-        else {
+        if (bucket == static_cast<size_t>(-1)) [[unlikely]] throw LDN::exceptions::Size("No avaiable Bucket has been found in the Hash-Set!!!");
+        else [[likely]] {
             this->table[bucket] = key;
             this->elements++; 
         }
@@ -112,8 +112,19 @@ namespace LDN::hash_set {
     void Close<TYPE>::resize() noexcept {
         size_t new_size = this->size << 1;
         std::unique_ptr<TYPE[]> new_table = std::make_unique<TYPE[]>(new_size);
-        for (size_t i = 0; i < this->size; i++) new_table[i] = this->table[i];
-        for(size_t i = this->size; i < new_size; i++) new_table[i] = this->EMPTY;
+        for (size_t i = 0; i < new_size; i++) new_table[i] = this->EMPTY;
+        for (auto element : *this) {
+            size_t bucket = std::hash<TYPE>{}(element) % new_size;
+            if (new_table[bucket] == this->EMPTY) new_table[bucket] = element;
+            else {
+                for (size_t step = 1; step < new_size; step++) {
+                    size_t index = bucket;
+                    index += (this->quadratic) ? static_cast<size_t>(0.5 * step * (1 + step)) : step;
+                    index %= new_size;
+                    if (new_table[index] == this->EMPTY) new_table[index] = element;
+                }
+            }
+        }
         this->size = new_size;
         this->table = std::move(new_table);
     }

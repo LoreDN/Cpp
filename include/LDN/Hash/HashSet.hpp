@@ -38,18 +38,26 @@ namespace LDN::hash_set {
             std::unique_ptr<Bucket*[]> table;
 
             // Method --- Hash Function
-            const size_t hash(const TYPE& key) const noexcept override;
+            [[nodiscard]] const size_t hash(const TYPE& key) const noexcept override;
 
         public:
 
-            // constructor / destructor
+            // constructor
             explicit Open(const size_t& sz);
+            Open(const Open<TYPE>& other) = delete; // copy constructor
+            Open(Open<TYPE>&& other) noexcept = default; // move constructor
+
+            // assignement
+            Open<TYPE>& operator=(const Open<TYPE>& other) = delete; // copy assignement
+            Open<TYPE>& operator=(Open<TYPE>&& other) noexcept = default; // move assignement
+
+            // destructor
             ~Open() noexcept override;
 
             // Hash Methods --- implementation
             void clear() noexcept override;
-            bool contains(const TYPE& key) const noexcept override;
-            std::string toString() const noexcept override;
+            [[nodiscard]] bool contains(const TYPE& key) const noexcept override;
+            [[nodiscard]] std::string toString() const noexcept override;
 
             // HashSet Methods --- implementation
             void insert(const TYPE& key) override;
@@ -74,18 +82,20 @@ namespace LDN::hash_set {
 
                     // constructor
                     SpecificationIterator(Bucket** t, size_t sz, size_t i) : table(t), size(sz), index(i) {
-                        this->skipEmpty();
+                        if (!table) [[unlikely]] {
+                            node = nullptr;
+                            index = size;
+                        } else [[likely]] this->skipEmpty();
                     }
 
                     // Method --- Skip Empty
                     void skipEmpty() noexcept {
-                        while (this->index < this->size && !this->table[this->index]
-                        ) this->index++;
+                        while (this->index < this->size && !this->table[this->index]) this->index++;
                         this->node = (this->index < this->size) ? this->table[this->index] : nullptr;
                     }
 
                     // AbstractIterator Methods --- implementation
-                    TYPE& deref() const override { return this->node->value; }
+                    [[nodiscard]] TYPE& deref() const override { return this->node->value; }
                     void increment() override {
                         Bucket* next = this->node->next;
                         if (next) this->node = next;
@@ -94,12 +104,13 @@ namespace LDN::hash_set {
                             this->skipEmpty();
                         }
                     }
-                    bool equals(const LDN::HashSet<TYPE>::AbstractIterator* other) const override {
+                    [[nodiscard]] bool equals(const LDN::HashSet<TYPE>::AbstractIterator* other) const override {
                         auto other_iterator = dynamic_cast<const SpecificationIterator*>(other);
+                        if (!other_iterator) [[unlikely]] return false;
                         return this->node == other_iterator->node;
 
                     }
-                    std::unique_ptr<typename LDN::HashSet<TYPE>::AbstractIterator> clone() const override {
+                    [[nodiscard]] std::unique_ptr<typename LDN::HashSet<TYPE>::AbstractIterator> clone() const override {
                         return std::make_unique<SpecificationIterator>(this->table, this->size, this->index);
                     }
 
@@ -107,12 +118,18 @@ namespace LDN::hash_set {
 
             // Iterator Methods --- begin / end
             LDN::HashSet<TYPE>::Iterator begin() noexcept override {
-                SpecificationIterator it(this->table.get(), this->size, 0);
-                return typename LDN::HashSet<TYPE>::Iterator(it.clone());
+                return typename LDN::HashSet<TYPE>::Iterator(
+                    std::make_unique<SpecificationIterator>(
+                        this->table.get(), this->size, 0
+                    )
+                );
             }
             LDN::HashSet<TYPE>::Iterator end() noexcept override {
-                SpecificationIterator it(this->table.get(), this->size, this->size);
-                return typename LDN::HashSet<TYPE>::Iterator(it.clone());
+                return typename LDN::HashSet<TYPE>::Iterator(
+                    std::make_unique<SpecificationIterator>(
+                        this->table.get(), this->size, this->size
+                    )
+                );
             }
 
     };
@@ -133,18 +150,26 @@ namespace LDN::hash_set {
             bool quadratic;
 
             // Method --- Hash Function
-            const size_t hash(const TYPE& key) const noexcept override;
+            [[nodiscard]] const size_t hash(const TYPE& key) const noexcept override;
 
         public:
 
-            // constructor / destructor
+            // constructor
             explicit Close(const size_t& sz, bool probing, TYPE empty, TYPE tombstone);
+            Close(const Close<TYPE>& other) = delete; // copy constructor
+            Close(Close<TYPE>&& other) noexcept = default; // move constructor
+
+            // assignement
+            Close<TYPE>& operator=(const Close<TYPE>& other) = delete; // copy assignement
+            Close<TYPE>& operator=(Close<TYPE>&& other) noexcept = default; // move assignement
+
+            // destructor
             ~Close() noexcept override = default;
 
             // Hash Methods --- implementation
             void clear() noexcept override;
-            bool contains(const TYPE& key) const noexcept override;
-            std::string toString() const noexcept override;
+            [[nodiscard]] bool contains(const TYPE& key) const noexcept override;
+            [[nodiscard]] std::string toString() const noexcept override;
 
             // HashSet Methods --- implementation
             void insert(const TYPE& key) override;
@@ -173,7 +198,8 @@ namespace LDN::hash_set {
                     // constructor
                     SpecificationIterator(TYPE* t, size_t sz, size_t i, TYPE empty, TYPE tombstone) 
                         : table(t), size(sz), index(i), EMPTY(empty), TOMBSTONE(tombstone) {
-                        this->skipEmpty();
+                        if (!table) [[unlikely]] index = size;
+                        else [[likely]] this->skipEmpty();
                     }
 
                     // Method --- Skip Empty
@@ -185,17 +211,17 @@ namespace LDN::hash_set {
                     }
 
                     // AbstractIterator Methods --- implementation
-                    TYPE& deref() const override { return this->table[this->index]; }
+                    [[nodiscard]] TYPE& deref() const override { return this->table[this->index]; }
                     void increment() override {
                         this->index++;
                         this->skipEmpty();
                     }
-                    bool equals(const LDN::HashSet<TYPE>::AbstractIterator* other) const override {
+                    [[nodiscard]] bool equals(const LDN::HashSet<TYPE>::AbstractIterator* other) const override {
                         auto other_iterator = dynamic_cast<const SpecificationIterator*>(other);
-                        if (!other_iterator) return false;
+                        if (!other_iterator) [[unlikely]] return false;
                         return this->index == other_iterator->index && this->table == other_iterator->table;
                     }
-                    std::unique_ptr<typename LDN::HashSet<TYPE>::AbstractIterator> clone() const override {
+                    [[nodiscard]] std::unique_ptr<typename LDN::HashSet<TYPE>::AbstractIterator> clone() const override {
                         return std::make_unique<SpecificationIterator>(this->table, this->size, this->index, this->EMPTY, this->TOMBSTONE);
                     }
 
@@ -203,12 +229,18 @@ namespace LDN::hash_set {
 
             // Iterator Methods --- begin / end
             LDN::HashSet<TYPE>::Iterator begin() noexcept override {
-                SpecificationIterator it(this->table.get(), this->size, 0, this->EMPTY, this->TOMBSTONE);
-                return typename LDN::HashSet<TYPE>::Iterator(it.clone());
+                return typename LDN::HashSet<TYPE>::Iterator(
+                    std::make_unique<SpecificationIterator>(
+                        this->table.get(), this->size, 0, this->EMPTY, this->TOMBSTONE
+                    )
+                );
             }
             LDN::HashSet<TYPE>::Iterator end() noexcept override {
-                SpecificationIterator it(this->table.get(), this->size, this->size, this->EMPTY, this->TOMBSTONE);
-                return typename LDN::HashSet<TYPE>::Iterator(it.clone());
+                return typename LDN::HashSet<TYPE>::Iterator(
+                    std::make_unique<SpecificationIterator>(
+                        this->table.get(), this->size, this->size, this->EMPTY, this->TOMBSTONE
+                    )
+                );
             }
 
     };

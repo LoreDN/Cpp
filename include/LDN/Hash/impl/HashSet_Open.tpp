@@ -24,7 +24,7 @@ namespace LDN::hash_set {
 
     // Method --- Hash Function
     template <typename TYPE>
-    const size_t Open<TYPE>::hash(const TYPE& key) const noexcept {
+    [[nodiscard]] const size_t Open<TYPE>::hash(const TYPE& key) const noexcept {
         return std::hash<TYPE>{}(key) % this->size;
     }
 
@@ -50,7 +50,7 @@ namespace LDN::hash_set {
     
     // Method 1.2 --- Check if an element is in the Hash-Set
     template <typename TYPE>
-    bool Open<TYPE>::contains(const TYPE& key) const noexcept {
+    [[nodiscard]] bool Open<TYPE>::contains(const TYPE& key) const noexcept {
         size_t index = this->hash(key);
         Bucket* bucket = this->table[index];
         for (; bucket && bucket->value != key; bucket = bucket->next);
@@ -60,7 +60,7 @@ namespace LDN::hash_set {
 
     // Method 1.3 --- Convert the Hash-Set to a String
     template <typename TYPE>
-    std::string Open<TYPE>::toString() const noexcept {
+    [[nodiscard]] std::string Open<TYPE>::toString() const noexcept {
         std::ostringstream out_stream;
         for (size_t i = 0; i < this->size; ++i) {
             out_stream << "Bucket " << i << ":";
@@ -81,7 +81,7 @@ namespace LDN::hash_set {
     // Method 2.1 --- Insert a key in the Hash-Set
     template <typename TYPE>
     void Open<TYPE>::insert(const TYPE& key) {
-        if (this->contains(key)) return;
+        if (this->contains(key)) [[unlikely]] return;
         size_t index = this->hash(key);
         Bucket* bucket = this->table[index];
         if (bucket) {
@@ -124,8 +124,16 @@ namespace LDN::hash_set {
     void Open<TYPE>::resize() noexcept {
         size_t new_size = this->size << 1;
         std::unique_ptr<Bucket*[]> new_table = std::make_unique<Bucket*[]>(new_size);
-        for (size_t i = 0; i < this->size; i++) new_table[i] = this->table[i];
-        for(size_t i = this->size; i < new_size; i++) new_table[i] = nullptr;
+        for (auto element : *this) {
+            size_t index = std::hash<TYPE>{}(element) % new_size;
+            if (new_table[index]) {
+                Bucket* bucket = new_table[index];
+                for (; bucket->next; bucket = bucket->next);
+                bucket->next = new Bucket(element);
+            } else {
+                new_table[index] = new Bucket(element);
+            }
+        }
         this->size = new_size;
         this->table = std::move(new_table);
     }
