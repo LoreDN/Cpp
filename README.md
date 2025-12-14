@@ -68,9 +68,9 @@ sudo ldconfig
 Implementation of different Hash Data-Structures, for now have been implemented Hash-Sets with different hashing rules.
 
 ```bash
-# latest v1.0.0
-wget https://github.com/LoreDN/Cpp/releases/download/Hash_v1.0.0/ldn-hash-v1.0.0.deb
-sudo dpkg -i ldn-hash-v1.0.0.deb
+# latest v1.0.1
+wget https://github.com/LoreDN/Cpp/releases/download/Hash_v1.0.1/ldn-hash-v1.0.1.deb
+sudo dpkg -i ldn-hash-v1.0.1.deb
 
 # update linker path
 echo "/usr/lib/LDN" | sudo tee /etc/ld.so.conf.d/ldn.conf
