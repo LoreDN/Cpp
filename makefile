@@ -29,13 +29,13 @@ Hash:
 	rm -rf build
 
 doc-Hash:
-	pdflatex -output-directory=docs/Hash/v1.0.0 docs/Hash/v1.0.0/Hash.tex
-	pdflatex -output-directory=docs/Hash/v1.0.0 docs/Hash/v1.0.0/Hash.tex
-	rm -f docs/Hash/v1.0.0/Hash.aux docs/Hash/v1.0.0/Hash.log 
-	rm -f docs/Hash/v1.0.0/Hash.out docs/Hash/v1.0.0/Hash.toc
+	pdflatex -output-directory=docs/Hash/v1.0 docs/Hash/v1.0/Hash.tex
+	pdflatex -output-directory=docs/Hash/v1.0 docs/Hash/v1.0/Hash.tex
+	rm -f docs/Hash/v1.0/Hash.aux docs/Hash/v1.0/Hash.log 
+	rm -f docs/Hash/v1.0/Hash.out docs/Hash/v1.0/Hash.toc
 
 uml-Hash:
-	plantuml -tpdf docs/Hash/v1.0.0/Hash_UML.puml
+	plantuml -tpdf docs/Hash/v1.0/Hash_UML.puml
 
 
 # =================== Clean Rule --- build/lib/temp ==================

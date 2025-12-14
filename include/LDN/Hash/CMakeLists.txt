@@ -1,6 +1,6 @@
 # ======================== Hash/CMakeLists.txt =======================
 cmake_minimum_required(VERSION 3.15)
-project(LDN_Hash VERSION 1.0.0 LANGUAGES CXX)
+project(LDN_Hash VERSION 1.0.1 LANGUAGES CXX)
 
 set(LIB_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 set(SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../../src")

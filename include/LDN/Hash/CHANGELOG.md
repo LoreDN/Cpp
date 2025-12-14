@@ -6,6 +6,16 @@ The format follows the standard [Keep a Changelog](https://keepachangelog.com/it
 
 ---
 
+## [1.0.1] - 2025-12-14
+### Changed
+- Set Move constructor/assignement for `LDN::hash_set::Open` & `LDN::hash_set::Close`
+
+### Fixed
+- Fixed `HashSet.resize()` in order to update elements bucket
+- Add attributes [[ ]] to the already implemented methods
+
+---
+
 ## [1.0.0] - 2025-11-16
 ### Added
 - First release of the library `Hash`

@@ -111,7 +111,7 @@
         \underline{Repository:} \href{https://github.com/LoreDN/Cpp}{https://github.com/LoreDN/Cpp} \\[0.5em] 
 
         \rule{\textwidth}{1pt} \par \vspace{0.7em}
-        {\Huge Hash\_v1.0.0 --- Documentation} \\[0.5em]
+        {\Huge Hash\_v1.0.1 --- Documentation} \\[0.5em]
         \rule{\textwidth}{1pt} \par \vspace{0.5em}
         
     \end{minipage}
@@ -178,18 +178,20 @@
                     \textcolor{black}{.} \qquad \quad size\_t size; \\[0.2em]
                     \textcolor{black}{.} \qquad \quad size\_t elements; \\[0.4cm]
                     \textcolor{black}{.} \qquad \quad //Method --- Hash Function \\[0.2em]
-                    \textcolor{black}{.} \qquad \quad virtual const size\_t hash(const TYPE\& key) const noexcept = 0; \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad [[nodiscard]] virtual const size\_t hash(const TYPE\& key) const noexcept = 0; \\[0.4cm]
                 \textcolor{black}{.} \quad public: \\[0.4cm]
                     \textcolor{black}{.} \qquad \quad // constructor / destructor \\[0.2em]
                     \textcolor{black}{.} \qquad \quad explicit Hash(const size\_t\& sz) : size(sz), elements(0) \{\} \\[0.2em]
                     \textcolor{black}{.} \qquad \quad virtual \midtilde Hash() noexcept = default; \\[0.4cm]
                     \textcolor{black}{.} \qquad \quad // getters \\[0.2em]
-                    \textcolor{black}{.} \qquad \quad inline const size\_t\& getSize() const noexcept \{ return this->size; \} \\[0.2em]
-                    \textcolor{black}{.} \qquad \quad inline const size\_t\& getElements() const noexcept \{ return this->elements; \} \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad [[nodiscard]] inline const size\_t\& getSize() const noexcept \{ return \\[0.2em]
+                        \textcolor{black}{.} \qquad \qquad \quad this->size; \} \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad [[nodiscard]] inline const size\_t\& getElements() const noexcept \{ return \\[0.2em]
+                        \textcolor{black}{.} \qquad \qquad \quad this->elements; \} \\[0.4cm]
                     \textcolor{black}{.} \qquad \quad // Methods --- clear / contains / toString \\[0.2em]
                     \textcolor{black}{.} \qquad \quad virtual void clear() noexcept = 0; \\[0.2em]
-                    \textcolor{black}{.} \qquad \quad virtual bool contains(const TYPE\& key) const noexcept = 0; \\[0.2em]
-                    \textcolor{black}{.} \qquad \quad virtual std::string toString() const noexcept = 0; \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad [[nodiscard]] virtual bool contains(const TYPE\& key) const noexcept = 0; \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad [[nodiscard]] virtual std::string toString() const noexcept = 0; \\[0.4cm]
                 \}; \\[0.4cm]
                 // output stream operator << \\[0.2em]
                 template <typename TYPE> \\[0.2em]
@@ -199,13 +201,13 @@
                 \}
             }
                 
+                \pagebreak
                 \libfunction{size\_t size;} \noindent
                 The \textbf{Hash-Structure} size, it is a \textit{protected} member, since the user is not able to modify it.
 
                 \libfunction{size\_t elements;} \noindent
                 The number of elements currently stored in the \textbf{Hash-Structure}, it is a \textit{protected} member, since the user is not able to modify it.
 
-                \pagebreak
                 \libfunction{explicit Hash(const size\_t\& sz);} \noindent
                 This is the \textit{constructor}, which assignes a size\_t \code{sz} to the \textit{protected} member \code{Hash.size}, then sets to 0 the \textit{protected} member \code{Hash.elements}.
 
@@ -213,13 +215,22 @@
                 This is the \textit{destructor}, which is automatically invocated when deleting the object. \\[0.2em]
                 It has been left as a \textit{virtual method}, in order to ensure the Class to be abstract.
 
+                \libfunction{[[nodiscard]] virtual const size\_t hash(const TYPE\& key) const noexcept = 0;} \noindent
+                This \textit{virtual method} imposes that each \textbf{Hash-Structure} has to provide a method to hash a key.
+
+                \libfunction{[[nodiscard]] inline const size\_t\& getSize() const noexcept \{ return this->size; \}} \noindent
+                Getter for the attribute \code{Hash.size}.
+
+                \libfunction{[[nodiscard]] inline const size\_t\& getElements() const noexcept \{ return this->elements; \}} \noindent
+                Getter for the attribute \code{Hash.elements}.
+
                 \libfunction{virtual void clear() noexcept = 0;} \noindent
                 This \textit{virtual method} imposes that each \textbf{Hash-Structure} has to provide a method to clean itself.
                 
-                \libfunction{virtual bool contains(const TYPE\& key) const noexcept = 0;} \noindent
+                \libfunction{[[nodiscard]] virtual bool contains(const TYPE\& key) const noexcept = 0;} \noindent
                 This \textit{virtual method} imposes that each \textbf{Hash-Structure} has to provide a method to check if an element is stored.
                 
-                \libfunction{virtual std::string toString() const noexcept = 0;} \noindent
+                \libfunction{[[nodiscard]] virtual std::string toString() const noexcept = 0;} \noindent
                 This \textit{virtual method} imposes that each \textbf{Hash-Structure} has to provide a method to be printed correctly.
 
                 \libfunction{inline std::ostream\& operator<<(std::ostream\& out\_stream, const LDN::Hash<TYPE>\& hash);} \noindent
@@ -238,7 +249,7 @@
                     \textcolor{black}{.} \qquad \quad virtual void insert(const TYPE\& key) = 0; \\[0.2em]
                     \textcolor{black}{.} \qquad \quad virtual void insert(const TYPE\& key) noexcept = 0; \\[0.2em]
                     \textcolor{black}{.} \qquad \quad virtual void resize() noexcept = 0; \\[0.2em]
-                    \textcolor{black}{.} \qquad \quad inline const double loadFactor() const \{ \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad [[nodiscard]] inline const double loadFactor() const \{ \\[0.2em]
                         \textcolor{black}{.} \qquad \qquad \quad return static\_cast<double>(this->elements) / static\_cast<double>(this->size); \\[0.2em]
                     \textcolor{black}{.} \qquad \quad \} \\[0.4cm]
                     \textcolor{black}{.} \qquad \quad // ------------------------- Iterator Interface ------------------------- \\[0.2em]
@@ -266,7 +277,7 @@
                 \libfunction{virtual void resize() noexcept = 0;} \noindent
                 This \textit{virtual method} imposes that each \textbf{Hash-Set} has to provide a method to resize itself.
 
-                \libfunction{inline const double loadFactor() const} \noindent
+                \libfunction{[[nodiscard]] inline const double loadFactor() const} \noindent
                 Method which allows to calculate the current \textit{load factor} of the \textbf{Hash-Set}.
 
                 \libfunction{// ------------------------- Iterator Interface -------------------------} \noindent
@@ -293,10 +304,16 @@
                     \textcolor{black}{.} \qquad \quad// attributes \\[0.2em]
                     \textcolor{black}{.} \qquad \quad std::unique\_ptr<Bucket*[]> table; \\[0.4cm]
                     \textcolor{black}{.} \qquad \quad // Method --- Hash Function \\[0.2em]
-                    \textcolor{black}{.} \qquad \quad const size\_t hash(const TYPE\& key) const noexcept override; \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad [[nodiscard]] const size\_t hash(const TYPE\& key) const noexcept override; \\[0.4cm]
                 \textcolor{black}{.} \quad public: \\[0.4cm]
-                    \textcolor{black}{.} \qquad \quad // constructor / destructor \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad // constructor \\[0.2em]
                     \textcolor{black}{.} \qquad \quad explicit Open(const size\_t\& sz); \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad Open(const Open<TYPE>\& other) = delete; // copy constructor \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad Open(Open<TYPE>\&\& other) noexcept = default; // move constructor \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // assignement \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad Open<TYPE>\& operator=(const Open<TYPE>\& other) = delete; \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad Open<TYPE>\& operator=(Open<TYPE>\&\& other) noexcept = default; \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // destructor \\[0.2em]
                     \textcolor{black}{.} \qquad \quad \midtilde Open() noexcept override; \\[0.4cm]
                     \textcolor{black}{.} \qquad \quad // Hash Methods --- implementation \\[0.2em]
                     \textcolor{black}{.} \qquad \quad ... \\[0.4cm]
@@ -304,18 +321,10 @@
                     \textcolor{black}{.} \qquad \quad ...\\[0.4cm]
                     \textcolor{black}{.} \qquad \quad // ------------------------- Iterator Implementation ------------------------- \\[0.2em]
                     \textcolor{black}{.} \qquad \quad ... \\[0.4cm]
-                    \textcolor{black}{.} \qquad \quad // Iterator Methods --- begin / end \\[0.2em]
-                    \textcolor{black}{.} \qquad \quad LDN::HashSet<TYPE>::Iterator begin() noexcept override \{ \\[0.2em]
-                        \textcolor{black}{.} \qquad \qquad \quad SpecificationIterator it(this->table.get(), this->size, 0); \\[0.2em]
-                        \textcolor{black}{.} \qquad \qquad \quad return typename LDN::HashSet<TYPE>::Iterator(it.clone()); \\[0.2em]
-                    \textcolor{black}{.} \qquad \quad \} \\[0.2em]
-                    \textcolor{black}{.} \qquad \quad LDN::HashSet<TYPE>::Iterator end() noexcept override \{ \\[0.2em]
-                        \textcolor{black}{.} \qquad \qquad \quad SpecificationIterator it(this->table.get(), this->size, this->size); \\[0.2em]
-                        \textcolor{black}{.} \qquad \qquad \quad return typename LDN::HashSet<TYPE>::Iterator(it.clone()); \\[0.2em]
-                    \textcolor{black}{.} \qquad \quad \} \\[0.4cm]
                 \};
             }
 
+                \pagebreak
                 \libfunction{struct Bucket\{...\};} \noindent
                 Definition of an helper struct \code{LDN::hash\_set::Open::Bucket}, private to the \textbf{Hash-Set} Specification, which allows to use the Hash-Structure with 
                 chaining (following the \textbf{Open hashing} rule).
@@ -324,13 +333,20 @@
                 Implementation of the Hash-Table used for the \textbf{Hash-Set}, it has been used a \code{std::unique\_ptr<>} in order to keep the user from accessing the table 
                 directly (due to the concept of \textbf{Hash-Set}).
 
-                \libfunction{const size\_t hash(const TYPE\& key) const noexcept override;} \noindent
+                \libfunction{[[nodiscard]] const size\_t hash(const TYPE\& key) const noexcept override;} \noindent
                 Implementation of the \textit{hash function}, it is based on the standard-library struct \code{std::hash<>}, allowing correct and complete management of the 
                 hashing rule following \textbf{C++} standard.
 
                 \libfunction{explicit Open(const size\_t\& sz);} \noindent
                 This is the \textit{constructor}, which calls back the constructor of the Generalization \code{LDN::HashSet<TYPE>} and makes an unique Hash-Table.
 
+                \libclass{Open(const Open<TYPE>\& other) = delete; \\[0.2em]
+                    Open(Open<TYPE>\&\& other) noexcept = default; \\[0.2em]
+                    Open<TYPE>\& operator=(const Open<TYPE>\& other) = delete; \\[0.2em]
+                    Open<TYPE>\& operator=(Open<TYPE>\&\& other) noexcept = default;
+                } \noindent
+                This are the \textit{copy/move constructors and assignement operators}, which have been enabled only for moving the \textbf{Hash-Set}.
+                
                 \libfunction{\midtilde Open() noexcept override;} \noindent
                 This is the \textit{destructor}, which is automatically invocated when deleting the object.
 
@@ -342,11 +358,6 @@
                 
                 \libfunction{// ------------------------- Iterator Implementation -------------------------} \noindent
                 Technical implementation of the \textbf{Hash-Set} as an \textit{Iterator}, if you want to see the technicalities, check the \textit{header "HashSet.hpp"}.
-
-                \libclass{LDN::HashSet<TYPE>::Iterator begin() noexcept override; \\[0.2em]
-                    LDN::HashSet<TYPE>::Iterator end() noexcept override;} \noindent
-                Method which allows the \textbf{Hash-Set} to be used as an \textit{Iterator}, the user does not need to call them directly. \\[0.2em]
-                They implement the Polimorphic \textbf{Hash-Set} ones, so that both Generalization and Specification can be used as \textit{Iterators}.
 
         \pagebreak
         \libcategory{1.2 HashSet --> Close}
@@ -361,10 +372,16 @@
                     \textcolor{black}{.} \qquad \quad std::unique\_ptr<TYPE[]> table; \\[0.2em]
                     \textcolor{black}{.} \qquad \quad bool quadratic; \\[0.4cm]
                     \textcolor{black}{.} \qquad \quad // Method --- Hash Function \\[0.2em]
-                    \textcolor{black}{.} \qquad \quad const size\_t hash(const TYPE\& key) const noexcept override; \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad [[nodiscard]] const size\_t hash(const TYPE\& key) const noexcept override; \\[0.4cm]
                 \textcolor{black}{.} \quad public: \\[0.4cm]
-                    \textcolor{black}{.} \qquad \quad // constructor / destructor \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad // constructor \\[0.2em]
                     \textcolor{black}{.} \qquad \quad explicit Close(const size\_t\& sz, bool probing, TYPE empty, TYPE tombstone); \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad Close(const Close<TYPE>\& other) = delete; // copy constructor \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad Close(Close<TYPE>\&\& other) noexcept = default; // move constructor \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // assignement \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad Close<TYPE>\& operator=(const Close<TYPE>\& other) = delete; \\[0.2em]
+                    \textcolor{black}{.} \qquad \quad Close<TYPE>\& operator=(Close<TYPE>\&\& other) noexcept = default; \\[0.4cm]
+                    \textcolor{black}{.} \qquad \quad // destructor \\[0.2em]
                     \textcolor{black}{.} \qquad \quad \midtilde Close() noexcept override = default; \\[0.4cm]
                     \textcolor{black}{.} \qquad \quad // Hash Methods --- implementation \\[0.2em]
                     \textcolor{black}{.} \qquad \quad ... \\[0.4cm]
@@ -372,9 +389,6 @@
                     \textcolor{black}{.} \qquad \quad ...\\[0.4cm]
                     \textcolor{black}{.} \qquad \quad // ------------------------- Iterator Implementation ------------------------- \\[0.2em]
                     \textcolor{black}{.} \qquad \quad ... \\[0.4cm]
-                    \textcolor{black}{.} \qquad \quad // Iterator Methods --- begin / end \\[0.2em]
-                    \textcolor{black}{.} \qquad \quad LDN::HashSet<TYPE>::Iterator begin() noexcept override \{...\} \\[0.2em]
-                    \textcolor{black}{.} \qquad \quad LDN::HashSet<TYPE>::Iterator end() noexcept override \{...\} \\[0.4cm]
                 \};
             }
 
@@ -396,7 +410,7 @@
                 \libfunction{bool quadratic;} \noindent
                 Flag wich represents the method of probing (linear if set to \textit{false}, quadratic is set to \textit{true}).
 
-                \libfunction{const size\_t hash(const TYPE\& key) const noexcept override;} \noindent
+                \libfunction{[[nodiscard]] const size\_t hash(const TYPE\& key) const noexcept override;} \noindent
                 Implementation of the \textit{hash function}, it is based on the standard-library struct \code{std::hash<>}, allowing correct and complete management of the 
                 hashing rule following \textbf{C++} standard.
 
@@ -404,23 +418,25 @@
                 This is the \textit{constructor}, which calls back the constructor of the Generalization \code{LDN::HashSet<TYPE>} and makes an unique Hash-Table. \\[0.2em]
                 It also set for the only time the fake-constants \code{EMPTY} and \code{TOMBSTONE}.
 
+                \libclass{Close(const Close<TYPE>\& other) = delete; \\[0.2em]
+                    Close(Close<TYPE>\&\& other) noexcept = default; \\[0.2em]
+                    Close<TYPE>\& operator=(const Close<TYPE>\& other) = delete; \\[0.2em]
+                    Close<TYPE>\& operator=(Close<TYPE>\&\& other) noexcept = default;
+                } \noindent
+                This are the \textit{copy/move constructors and assignement operators}, which have been enabled only for moving the \textbf{Hash-Set}.
+
                 \libfunction{\midtilde Close() noexcept override = default;} \noindent
                 This is the \textit{destructor}, which is automatically invocated when deleting the object. \\[0.2em]
                 It is set to default, since the \code{std::unique\_ptr<>} delete itself automatically, and there are no other deletions (like chaining-related ones).
-
+                
+                \pagebreak
                 \libfunction{// Hash Methods --- implementation} \noindent
                 Implementation of the Methods declared by the Interface \code{LDN::Hash<TYPE>}.
 
                 \libfunction{// HashSet Methods --- implementation} \noindent
                 Implementation of the Methods declared by the Generalization \code{LDN::HashSet<TYPE>}.
                 
-                \pagebreak
                 \libfunction{// ------------------------- Iterator Implementation -------------------------} \noindent
                 Technical implementation of the \textbf{Hash-Set} as an \textit{Iterator}, if you want to see the technicalities, check the \textit{header "HashSet.hpp"}.
-
-                \libclass{LDN::HashSet<TYPE>::Iterator begin() noexcept override; \\[0.2em]
-                    LDN::HashSet<TYPE>::Iterator end() noexcept override;} \noindent
-                Method which allows the \textbf{Hash-Set} to be used as an \textit{Iterator}, the user does not need to call them directly. \\[0.2em]
-                They implement the Polimorphic \textbf{Hash-Set} ones, so that both Generalization and Specification can be used as \textit{Iterators}.
 
 \end{document}
