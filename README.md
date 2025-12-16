@@ -55,9 +55,9 @@ Here is a list of the libraries wich can be found in the repo, everyone in their
 The core of all the libraries collected in this repository, used in order to managed custom Exceptions.
 
 ```bash
-# latest v1.0.1
-wget https://github.com/LoreDN/Cpp/releases/download/Exception_v1.0.1/ldn-exception-v1.0.1.deb
-sudo dpkg -i ldn-exception-v1.0.1.deb
+# latest v1.1.0
+wget https://github.com/LoreDN/Cpp/releases/download/Exception_v1.1.0/ldn-exception-v1.1.0.deb
+sudo dpkg -i ldn-exception-v1.1.0.deb
 
 # update linker path
 echo "/usr/lib/LDN" | sudo tee /etc/ld.so.conf.d/ldn.conf
