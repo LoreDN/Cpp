@@ -20,3 +20,4 @@
 #include "Index.hpp"
 #include "Size.hpp"
 #include "File.hpp"
+#include "Dimension.hpp"
